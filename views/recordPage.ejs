@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title><%= record.name %></title>
+  <link rel="stylesheet" href="/css/recordPage/style.css" type="text/css">
+  <link rel="stylesheet" href="/css/recordPage/photoUpField.css" type="text/css">
+  <% include blocks/head.ejs %>
+  <script src="/js/gallery.js" type="text/javascript"></script>
+  <script src="/js/photoUpload/onRecordPage.js" type="text/javascript"></script>
+</head>
+
+<body>
+  <header>
+    <% include blocks/header.ejs %>
+  </header>
+
+  <article style="padding: 20px;">
+    <% if (errors.length != 0) { %>
+    <div class="alert alert-danger" style="display: inline-flex; flex-direction: column; margin: 0 auto 10px auto;">
+      <% for (var i = 0; i < errors.length; i++) { %>
+      <div><%= errors[i] %></div>
+      <% } %>
+    </div>
+    <% } %>
+    <% if (messages.length != 0) { %>
+    <div class="alert alert-success" style="display: inline-flex; flex-direction: column;  margin: 10px auto">
+      <% for (var i = 0; i < messages.length; i++) { %>
+      <div><%= messages[i] %></div>
+      <% } %>
+    </div>
+    <% } %>
+    <% if (record.length === 0) { %>
+    <div class="noRec">
+      <h3> В базе пока нет ни одной записи... </h3>
+      <div><a href="/add">Создать новую</a></div>
+    </div>
+    <% } else { %>
+    <div class="record-page">
+      <div class="record-imgs">
+        <a href="/<%= record.img %>" id="largePicLink" style="display: none">
+          <img src="/<%= record.img %>" name="<%= record.img %>" id="largePic" onload="imgLoad(this)"
+            onerror="imgError(this)" />
+        </a>
+        <div id="thumbs" class="record-imgs-bottom">
+          <% record.addImages.forEach(function(img) { %>
+          <div class="smallPicContainer" style="display: none;">
+            <form ref='uploadForm' action='/record/delImages' method='post' class='recordDelForm'
+              encType="multipart/form-data">
+              <img src="/img/red-cross.png" class="recordRedCross" />
+              <input type="hidden" name="id" id="id" value="<%= record.id %>">
+              <input type="hidden" name="picName" id="picName" class="picName" value="<%= img %>">
+            </form>
+            <img src="/<%= img %>" name="<%= img %>" class="smallPic" onload="imgLoad(this)" onerror="imgError(this)" />
+          </div>
+          <% }); %>
+          <% if (record.addImages.length < 3) { %>
+          <div class="add_picture_link">
+            <form ref='uploadForm' id='upload-container' action='/record/addImages' method='post'
+              encType="multipart/form-data">
+              <div>
+                <img id="upload-image" src="/img/plus.png">
+                <input type="file" id="file-input" name="Images" required multiple />
+                <label id="get-file-label">Выберите файл</label>
+                <span>или перетащите его сюда</span>
+                <input type="hidden" name="id" class="form-control" id="id" value="<%= record.id %>" required>
+              </div>
+            </form>
+          </div>
+          <% } %>
+        </div>
+      </div>
+      <div class="record-content">
+        <form ref='uploadForm' id='update-form' action='/record/update' method='post' encType="multipart/form-data">
+          <h1><%= record.name %></h1>
+          <p>Создано: <%= record.created %></p>
+          <div class="form-group required" id="update-name-field" hidden="true">
+            <input type="name" name="name" class="form-control" id="update-name" placeholder="Enter name"
+              value="<%= record.name %>" required>
+          </div>
+          <% if (numOfLinks) { %>
+          <div class="record-links">
+            <h3>Ссылки</h3>
+            <ul>
+              <span id="numOfLinks" hidden="true"><%= numOfLinks %></span>
+              <% if (record.links.length) { %>
+              <!-- Есть ссылки -->
+              <% for (var i = 0, counter = 0; i < record.links.length && i < numOfLinks; i++) { %>
+              <li>
+                <a href="<%= record.links[i].url %>" target="_blank">
+                  <p class="record-link">
+                    <!-- Добавить имя на ссылку, если есть -->
+                    <% if (record.links[i].name.length != 0) { %>
+                    <%= record.links[i].name %>
+                    <% } else { %>
+                    link <%= ++counter %>
+                    <% } %>
+                  </p>
+                </a>
+              </li>
+              <div class="input-group input-group-rounded" hidden="false">
+                <input type="url" class="form-control url<%= i + 1 %>" name="url" placeholder="Enter your link"
+                  value="<%= record.links[i].url %>">
+                <input type="text" class="form-control" name="linkName" placeholder="Name of link (or empty)"
+                  value="<%= record.links[i].name %>">
+                <div class="input-group-button">
+                  <div class="input-group-text"><img src="/img/red-cross.png" /></div>
+                </div>
+              </div>
+              <% }; %>
+              <% for (var i = 0, counter = record.links.length + 1; i < numOfLinks - record.links.length; i++, counter++) { %>
+              <div class="input-group input-group-rounded" hidden="true">
+                <input type="url" class="form-control url<%= counter %>" name="url" placeholder="Enter your link">
+                <input type="text" class="form-control" name="linkName" placeholder="Name of link (or empty)">
+                <div class="input-group-button">
+                  <div class="input-group-text"><img src="/img/red-cross.png" /></div>
+                </div>
+              </div>
+              <% }; %>
+              <span id="linksCol" hidden="true"><%= record.links.length %></span>
+              <% } else { %>
+              <!-- Нет ни одной ссылки -->
+              <p id="dot-dot-dot">...</p>
+              <% for (var i = 1; i < numOfLinks + 1; i++) { %>
+              <div class="input-group input-group-rounded" hidden="true">
+                <input type="url" class="form-control url<%= i %>" name="url" placeholder="Enter your link">
+                <input type="text" class="form-control" name="linkName" placeholder="Name of link (or empty)">
+                <div class="input-group-button">
+                  <div class="input-group-text"><img src="/img/red-cross.png" /></div>
+                </div>
+              </div>
+              <% }; %>
+              <span id="linksCol" hidden="true">0</span>
+              <% } %>
+            </ul>
+            <div class="add-button-container" id="form-add-links-button" hidden="true">
+              <p style="margin: 2px 0 0 0; font-size: 16px;">Добавить ссылку</p>
+              <img src="/img/plus.png" class="form-add-links-button" />
+            </div>
+          </div>
+          <% } %>
+          <input type="hidden" name="id" class="form-control" id="id" value="<%= record.id %>" required>
+          <div style="width: 100%; text-align: center"><button type="submit" class="btn btn-primary"
+              id="save-update-button" hidden="true">Сохранить</button></div>
+        </form>
+        <div style="width: 100%; text-align: center"><button class="btn btn-success"
+            id="show-update-form">Редактировать</button></div>
+      </div>
+    </div>
+    <% } %>
+  </article>
+
+  <script src="/js/bootstrap-validate.js" type="text/javascript"></script>
+  <script src="/js/links/linkActions.js" type="text/javascript"></script>
+</body>
+
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Новая запись</title>
+  <% include blocks/head.ejs %>
+  <link rel="stylesheet" href="/css/all/style.css" type="text/css">
+  <link rel="stylesheet" href="/css/form/style.css" type="text/css">
+  <link rel="stylesheet" href="/css/recordPage/photoUpField.css" type="text/css">
+  <script src="/js/photoUpload/onAddForm.js" type="text/javascript"></script>
+</head>
+
+<body>
+  <% include blocks/preloader.ejs %>
+  <header>
+    <% include blocks/header.ejs %>
+  </header>
+
+  <article style='text-align: center; padding-top: 40px;'>
+    <% if (messages.length != 0) { %>
+    <div class="alert alert-danger" style="display: inline-flex; flex-direction: column; margin: 0 auto 10px auto;">
+      <% for (var i = 0; i < messages.length; i++) { %>
+      <div><%= messages[i] %></div>
+      <% } %>
+    </div>
+    <% } %>
+    <h3 style='margin-bottom: 20px;'>Введите данные</h3>
+    <form ref='uploadForm' id='uploadForm' action='/add' method='post' encType="multipart/form-data">
+      <div class="form-group required">
+        <label for="name" class="control-label">Name</label>
+        <input type="name" name="name" class="form-control" id="name" placeholder="Enter name" required>
+      </div>
+      <% if (numOfLinks) { %>
+      <div class="form-group" id="links-group" style="margin-bottom: 0">
+        <label for="inlineFormInputGroupUsername" class="col-sm-2 control-label">Some links</label>
+        <% for (var i = 1; i <= numOfLinks; i++) { %>
+        <div class="input-group input-group-rounded" style="display: none">
+          <input type="url" class="form-control url<%= i %>" name="url" placeholder="Enter your link">
+          <input type="text" class="form-control" name="linkName" placeholder="Name of link (or empty)">
+          <div class="input-group-button">
+            <div class="input-group-text"><img src="/img/red-cross.png" class="recordRedCross" /></div>
+          </div>
+        </div>
+        <% } %>
+        <span id="numOfLinks" hidden="true"><%= numOfLinks %></span>
+      </div>
+      <div class="add-button-container" id="form-add-links-button">
+        <p style="margin: 2px 0 0 0;">Добавить ссылку</p>
+        <img src="/img/plus.png" class="form-add-links-button" />
+      </div>
+      <% } %>
+      <div class="form-group required">
+        <label for="file" class="control-label" style="margin-bottom: 0">Images</label>
+        </br>
+        <span class="control-span"><b>Загружено файлов:</b> <span></span></span>
+        <div class="add_picture_link">
+          <div>
+            <img id="upload-image" src="/img/plus.png">
+            <input type="file" id="file-input" name="Images" required multiple />
+            <label id="get-file-label">Выберите файл</label>
+            <span>или перетащите его сюда</span>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </article>
+
+  <script src="/js/bootstrap-validate.js"></script>
+  <script src="/js/links/linksToCreateForm.js" type="text/javascript"></script>
+</body>
+
+</html>

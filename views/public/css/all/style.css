@@ -1,0 +1,158 @@
+/* Верхний функциональный блок таблицы */
+
+.tableActions {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.tableActions .search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 30%;
+}
+
+#resultsQty { 
+  position: absolute; 
+  color: #8c8681;
+  right: 10px;
+}
+
+/* Нижний функциональный блок таблицы */
+
+.tableActionsFooter {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+  min-width: 38px;
+}
+
+/* Таблица */
+.table {
+  width: 100%;
+  margin-bottom: 0;
+}
+.table th {
+  color: rgb(65, 63, 61);
+}
+.table th:first-child {
+ vertical-align: middle;
+} 
+.table tr td:nth-child(2) {
+  vertical-align: middle;
+  min-width: 120px;
+  width: 40%;
+} 
+.table tr td:nth-child(3) {
+  vertical-align: middle;
+  width: 40%;
+} 
+.table tr td:nth-child(4) {
+  vertical-align: middle;
+  width: 10%;
+} 
+
+.tableImgCont {
+  max-width: 200px;
+  margin: 0 auto;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+.tableImgCont img {
+  flex: none;
+  max-height: 300px;
+}
+
+@media (max-width: 820px)
+{
+  .table th:first-child {
+    display: none;
+   } 
+}
+
+/* Индикаторы сортировки таблицы */
+
+.table th.sortable:hover {
+  color: rgb(49, 47, 46);
+}
+.table th.sortable {
+  cursor: pointer;
+}
+
+.table th.sortable::after {
+  font-family: FontAwesome;
+  content: "\f0dc";
+  color: rgb(190, 183, 183);
+  margin-left: 10px;
+}
+
+.table th.sortable.asc::after {
+  content: "\f0d8";
+}
+
+.table th.sortable.desc::after {
+  content: "\f0d7";
+}
+
+.table th.sortable:hover::after {
+  color: rgb(49, 47, 46);
+}
+
+/* Кнопки перехода по страницам */
+.pagination {
+  margin: auto 0;
+}
+
+.page-link {
+  transition: all 0.2s;
+}
+.page-link:active {
+  outline:none !important;
+  border: none;
+  box-shadow: none;
+}
+
+/* Кнопка Наверх */
+#return-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(54, 54, 54, 0.6);
+  width: 50px;
+  height: 50px;
+  display: block;
+  text-decoration: none;
+  -webkit-border-radius: 35px;
+  -moz-border-radius: 35px;
+  transition: all 0.2s;
+  border-radius: 35px;
+  display: none;
+  -webkit-transition: all 0.3s linear;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+#return-to-top i {
+  color: #fff;
+  margin: 0;
+  position: relative;
+  top: 13px;
+  font-size: 19px;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+#return-to-top:hover {
+  background: rgba(54, 54, 54, 0.8);
+}
+#return-to-top:hover i {
+  color: #fff;
+  top: 5px;
+}
+

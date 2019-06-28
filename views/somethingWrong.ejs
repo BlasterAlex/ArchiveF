@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Ошибка</title>
+  <% include blocks/head.ejs %>
+</head>
+
+<body>
+  <header>
+    <% include blocks/header.ejs %>
+  </header>
+
+  <article>
+    <div class="errorPlace">
+      <h1><%= textError %></h1>
+      <% if (textError === "Не найден файл JSON") { %>
+      <h2>Но вы можете создать новый...</h2>
+      <div><a href="/create/json" style="font-size: 17px;">Создать новый</a></div>
+      <% } else %>
+      <% if (textError === "Не найдена папка с базой") { %>
+      <h2>Но вы можете создать новую...</h2>
+      <div><a href="/create/dir" style="font-size: 17px;">Создать новую</a></div>
+      <% } else %>
+      <% if (textError === "Не найдена папка изображений") { %>
+      <h2>Создайте новую, пожалуйста...</h2>
+      <div><a href="/create/imgDir" style="font-size: 17px;">Создать новую</a></div>
+      <% } else %>
+      <% if ((textError === "Файл уже был создан!") || (textError === "Папка уже была создана!")) { %>
+      <div><a href="/">На главную</a> </div>
+      <% } %>
+      <img src='/img/waiting.gif' />
+    </div>
+  </article>
+</body>
+
+</html>
