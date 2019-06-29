@@ -34,7 +34,7 @@
   <header>
     <% include blocks/header.ejs %>
   </header>
-  <article style="text-align: center; padding-top: 30px;">
+  <article style="text-align: center">
     <% if (errors.length != 0) { %>
     <div class="alert alert-danger" style="display: inline-flex; flex-direction: column; margin: 0 auto 10px auto;">
       <% for (var i = 0; i < errors.length; i++) { %>
@@ -43,8 +43,10 @@
     </div>
     <% } %>
     <% if (records.length === 0) { %>
-    <h3 class="h3_noRec"> Нечего удалять... </h3>
-    <div class="a_noRec"><a href="/add" class="ErrorLink">Создать новую</a></div>
+    <div class="noRec">
+      <h3> В базе пока нет ни одной записи... </h3>
+      <div><a href="/add">Создать новую</a></div>
+    </div>
     <% } else { %>
     <form action='/delete' method='post'>
       <div class="form-group">

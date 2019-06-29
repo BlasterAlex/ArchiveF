@@ -1,7 +1,6 @@
 // Замена сломанной картинки на дефолтную
 function imgError(img) {
   img.src = '/img/default.jpg';
-  img.name = 'default.jpg';
 }
 
 // Отображение фото после загрузки
