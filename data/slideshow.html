@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang='en' class=''>
+
+<head>
+  <meta charset='UTF-8'>
+  <style class="cp-pen-styles">
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      padding: 20px;
+      background: #fff;
+      user-select: none;
+    }
+
+    [type=radio] {
+      display: none;
+    }
+
+    #slider {
+      height: 28vw;
+      position: relative;
+      perspective: 1000px;
+      transform-style: preserve-3d;
+    }
+
+    #slider label {
+      margin: auto;
+      width: 60%;
+      height: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+      position: absolute;
+      left: 0;
+      right: 0;
+      cursor: pointer;
+      display: none;
+      transition: transform 2.6s ease;
+    }
+
+    #slider label img {
+      height: auto;
+      max-width: 100%;
+    }
+
+    .farLeft,
+    .nearLeft,
+    .current,
+    .nearRight,
+    .farRight {
+      display: block !important
+    }
+
+    .farLeft,
+    .farRight {
+      box-shadow: 0 10px 25px 0 rgba(0, 0, 0, .3), 0 10px 20px 0 rgba(0, 0, 0, .2);
+      opacity: 0.7
+    }
+
+    .nearLeft,
+    .current,
+    .nearRight {
+      box-shadow: 0 10px 25px 0 rgba(0, 0, 0, .20), 0 11px 15px 0 rgba(0, 0, 0, .19);
+      opacity: 1
+    }
+
+    .farLeft {
+      transform: translate3d(-44%, 0, -225px)
+    }
+
+    .nearLeft {
+      transform: translate3d(-22%, 0, -115px)
+    }
+
+    .current {
+      transform: none
+    }
+
+    .nearRight {
+      transform: translate3d(22%, 0, -115px)
+    }
+
+    .farRight {
+      transform: translate3d(44%, 0, -225px)
+    }
+
+    /* #slide1 {
+      background: #00BCD4
+    }
+
+    #slide2 {
+      background: #4CAF50
+    }
+
+    #slide3 {
+      background: #CDDC39
+    }
+
+    #slide4 {
+      background: #FFC107
+    }
+
+    #slide5 {
+      background: #FF5722
+    } */
+  </style>
+</head>
+
+<body>
+  <section id="slider">
+    <input type="radio" name="slider" id="s1" checked>
+    <input type="radio" name="slider" id="s2">
+    <input type="radio" name="slider" id="s3">
+    <input type="radio" name="slider" id="s4">
+    <input type="radio" name="slider" id="s5">
+
+    <label for="s1" id="slide1"><img src="images/interface-screen-1.png" /></label>
+    <label for="s2" id="slide2"><img src="images/interface-screen-2.png" /></label>
+    <label for="s3" id="slide3"><img src="images/interface-screen-3.png" /></label>
+    <label for="s4" id="slide4"><img src="images/interface-screen-4.png" /></label>
+    <label for="s5" id="slide5"><img src="images/interface-screen-5.png" /></label>
+  </section>
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js'></script>
+  <script id="rendered-js">
+    var num = 0;
+    var slides = document.getElementsByName('slider');
+    var col = slides.length;
+
+    function arrangeSlides(curNum) {
+      // Отменить все преобразования
+      $('label').removeAttr('class');
+
+      // Задание свойств соседним элементам
+      let farLeft = curNum - 2;
+      if (farLeft < 1) farLeft = col + farLeft;
+      $('#slide' + farLeft).addClass('farLeft');
+
+      let nearLeft = curNum - 1;
+      if (nearLeft < 1) nearLeft = col + nearLeft;
+      $('#slide' + nearLeft).addClass('nearLeft');
+
+      $('#slide' + curNum).addClass('current');
+
+      let nearRight = curNum + 1;
+      if (nearRight > col) nearRight = nearRight - col;
+      $('#slide' + nearRight).addClass('nearRight');
+
+      let farRight = curNum + 2;
+      if (farRight > col) farRight = farRight - col;
+      $('#slide' + farRight).addClass('farRight');
+    }
+
+    $('input[type=radio][name=slider]').change(function () {
+      if (this.value === 'on') {
+        let curNum = $('#slider input:radio[name=slider]').index(this) + 1;
+        arrangeSlides(curNum);
+      }
+    });
+
+    if (col > 1) {
+      arrangeSlides(1);
+      function go() {
+        if (++num > col) num = 1;
+        arrangeSlides(num);
+        setTimeout(go, 2500); // callback
+      }
+      go();
+    }
+  </script>
+</body>
+
+</html>

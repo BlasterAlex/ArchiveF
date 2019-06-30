@@ -30,3 +30,7 @@ $ npm start
 Настройки сервиса находятся в [``/libs/config.js``](/libs/config.js). 
 
 Более подробную информацию об `ArchiveF` можно получить на соответствующей [странице Wiki](https://github.com/BlasterAlex/ArchiveF/wiki/%D0%98%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5)
+
+<p align="center">
+  <img src="./data/gif/slideshowInterface.gif" width="917"/>
+</p>
