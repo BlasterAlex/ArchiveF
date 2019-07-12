@@ -28,9 +28,6 @@
 
 #thumbs {
   padding-top: 10px;
-}
-
-.record-imgs-bottom {
   display: flex;
   justify-content: space-between;
   width: 100%;

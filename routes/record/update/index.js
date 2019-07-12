@@ -24,40 +24,6 @@ module.exports = function (req, res) {
       } else {
         records[index].name = req.body.name;
 
-        // Массивы ссылок
-        var links = req.body.url;
-        var link_names = req.body.linkName;
-
-        // Если ссылка является простой строкой
-        if (config.numOfLinks == 0 || config.numOfLinks == 1) {
-          links = [links];
-          link_names = [link_names];
-        }
-
-        // Сборка массива ссылок
-        var i = 0;
-        while (i < links.length) {
-          if (links[i] === 'null') {
-            links.splice(i, 1);
-            link_names.splice(i, 1);
-          } else { // добавление названия для непустой ссылки
-            links[i] = {
-              name: "",
-              url: links[i]
-            };
-            if (link_names[i] != 'null')
-              links[i].name = link_names[i];
-            ++i;
-          }
-        }
-
-        // Если максимальное количество ссылок меньше текущего размера массива
-        if (config.numOfLinks < records[index].links.length) {
-          records[index].links = links.concat(records[index].links.splice(config.numOfLinks));
-        } else {
-          records[index].links = links;
-        }
-
         // Проверка на дублирование
         var check;
         if (records.length != 0) check = records.find(x => x.name === records[index].name);
@@ -67,6 +33,40 @@ module.exports = function (req, res) {
           req.flash('error', 'Запись "' + records[index].name + '" уже есть');
           res.redirect('/record/' + req.body.id);
         } else { // если это новое имя
+
+          // Массивы ссылок
+          var links = req.body.url;
+          var link_names = req.body.linkName;
+
+          // Если ссылка является простой строкой
+          if (config.numOfLinks == 0 || config.numOfLinks == 1) {
+            links = [links];
+            link_names = [link_names];
+          }
+
+          // Сборка массива ссылок
+          var i = 0;
+          while (i < links.length) {
+            if (links[i] === 'null') {
+              links.splice(i, 1);
+              link_names.splice(i, 1);
+            } else { // добавление названия для непустой ссылки
+              links[i] = {
+                name: "",
+                url: links[i]
+              };
+              if (link_names[i] != 'null')
+                links[i].name = link_names[i];
+              ++i;
+            }
+          }
+
+          // Если максимальное количество ссылок меньше текущего размера массива
+          if (config.numOfLinks < records[index].links.length) {
+            records[index].links = links.concat(records[index].links.splice(config.numOfLinks));
+          } else {
+            records[index].links = links;
+          }
 
           // Сортировка
           function sortResults(prop, asc) {

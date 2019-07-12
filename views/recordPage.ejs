@@ -17,14 +17,14 @@
 
   <article>
     <% if (errors.length != 0) { %>
-    <div class="alert alert-danger" style="display: inline-flex; flex-direction: column; margin: 0 auto 10px auto;">
+    <div class="alert alert-danger">
       <% for (var i = 0; i < errors.length; i++) { %>
       <div><%= errors[i] %></div>
       <% } %>
     </div>
     <% } %>
     <% if (messages.length != 0) { %>
-    <div class="alert alert-success" style="display: inline-flex; flex-direction: column;  margin: 10px auto">
+    <div class="alert alert-success">
       <% for (var i = 0; i < messages.length; i++) { %>
       <div><%= messages[i] %></div>
       <% } %>
@@ -36,7 +36,7 @@
       <div><a href="/add">Создать новую</a></div>
     </div>
     <% } else { %>
-    <div class="record-page">
+    <div class="record-page" id="<%= record.id %>">
       <div class="record-imgs">
         <a href="/<%= record.img %>" id="largePicLink" style="display: none">
           <img src="/<%= record.img %>" name="<%= record.img %>" id="largePic" onload="imgLoad(this)"
@@ -45,27 +45,18 @@
         <div id="thumbs" class="record-imgs-bottom">
           <% record.addImages.forEach(function(img) { %>
           <div class="smallPicContainer" style="display: none;">
-            <form ref='uploadForm' action='/record/delImages' method='post' class='recordDelForm'
-              encType="multipart/form-data">
-              <img src="/img/red-cross.png" class="recordRedCross" />
-              <input type="hidden" name="id" id="id" value="<%= record.id %>">
-              <input type="hidden" name="picName" id="picName" class="picName" value="<%= img %>">
-            </form>
+            <img src="/img/red-cross.png" class="recordRedCross" />
             <img src="/<%= img %>" name="<%= img %>" class="smallPic" onload="imgLoad(this)" onerror="imgError(this)" />
           </div>
           <% }); %>
           <% if (record.addImages.length < 3) { %>
           <div class="add_picture_link">
-            <form ref='uploadForm' id='upload-container' action='/record/addImages' method='post'
-              encType="multipart/form-data">
-              <div>
-                <img id="upload-image" src="/img/plus.png">
-                <input type="file" id="file-input" name="Images" required multiple />
-                <label id="get-file-label">Выберите файл</label>
-                <span>или перетащите его сюда</span>
-                <input type="hidden" name="id" class="form-control" id="id" value="<%= record.id %>" required>
-              </div>
-            </form>
+            <div>
+              <img id="upload-image" src="/img/plus.png">
+              <input type="file" id="file-input" name="Images" required multiple />
+              <label id="get-file-label">Выберите файл</label>
+              <span>или перетащите его сюда</span>
+            </div>
           </div>
           <% } %>
         </div>
@@ -150,6 +141,7 @@
     <% } %>
   </article>
 
+  <script src="/js/clearFlash.js" type="text/javascript"></script>
   <script src="/js/bootstrap-validate.js" type="text/javascript"></script>
   <script src="/js/links/linkActions.js" type="text/javascript"></script>
 </body>

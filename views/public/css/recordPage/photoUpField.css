@@ -2,11 +2,6 @@
   width: 32%;
   position: relative;
   display: flex;
-  align-items: center;
-}
-
-#upload-container {
-  display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
@@ -17,13 +12,15 @@
   font-family: 'Segoe UI';
   color: #1f3c44;
   transition: all 0.2s;
+  align-self: center;
+  box-sizing: border-box;
 }
-#upload-container.focused {
+.add_picture_link.focused {
   border: 1px solid #007bffc7;
   box-shadow: 0px 0px 1px #007bff;
 }
 
-#upload-container div {
+.add_picture_link div {
   padding: 8px;
   display: flex;
   justify-content: center;
@@ -45,15 +42,15 @@
   background-position: left top, right top, left bottom, left top;
 }
 
-#upload-container:hover > div {
+.add_picture_link:hover > div {
   animation: border-dance 4s infinite linear;
 }
 
-#upload-container.dragover {
+.add_picture_link.dragover {
   background-color: #fafafa;
   outline-offset: -20px;
 }
-#upload-container.dragover > div {
+.add_picture_link.dragover > div {
   /* Dashed */
   background: 
     linear-gradient(90deg, #2b2a2a 50%, transparent 50%),
@@ -75,34 +72,34 @@
   }
 }
 
-#upload-container img {
+.add_picture_link img {
   width: 40%;
   min-width: 35px;
   user-select: none;
 }
 
-#upload-container label {
+.add_picture_link label {
   font-weight: bold;
   font-size: 1vw;
 }
 
-#upload-container:hover {
+.add_picture_link:hover {
   opacity: 0.9;
   cursor: pointer;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
   transform: translateY(-2px);
 }
 
-#upload-container:hover label {
+.add_picture_link:hover label {
   cursor: pointer;
   text-decoration: underline;
 }
 
-#upload-container span {
+.add_picture_link span {
   font-size: 1vw;
 }
 
-#upload-container input[type=file] {
+.add_picture_link input[type=file] {
   width: 0.1px;
   height: 0.1px;
   opacity: 0;
@@ -112,11 +109,11 @@
 
 @media (max-width: 1105px)
 {
-  #upload-container span {
+  .add_picture_link span {
     display: none;
   }
 
-  #upload-container label {
+  .add_picture_link label {
     margin-top: 10px;
     font-size: 1.1vw;
   }
@@ -124,11 +121,11 @@
 
 @media (max-width: 960px)
 {
-  #upload-container label {
+  .add_picture_link label {
     display: none;
   }
 
-  #upload-container img {
+  .add_picture_link img {
     width: 80%;
   }
 }
@@ -136,17 +133,17 @@
 @media (max-width: 800px)
 {
 
-  #upload-container label {
+  .add_picture_link label {
     font-size: 2.2vw;
     display: block;
   }
 
-  #upload-container span {
+  .add_picture_link span {
     display: block;
     font-size: 1.8vw;
   }
 
-  #upload-container img {
+  .add_picture_link img {
     width: 40%;
   }
 }
@@ -154,22 +151,22 @@
 @media (max-width: 600px)
 {
 
-  #upload-container span {
+  .add_picture_link span {
     display: none;
   }
 
-  #upload-container label {
+  .add_picture_link label {
     font-size: 2.5vw;
   }
 }
 
 @media (max-width: 520px)
 {
-  #upload-container label {
+  .add_picture_link label {
     display: none;
   }
 
-  #upload-container img {
+  .add_picture_link img {
     width: 80%;
   }
 }

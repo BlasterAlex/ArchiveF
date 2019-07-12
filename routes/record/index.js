@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-// url '/record'
-router.post('/addImages', require('./addImages'));
-router.post('/delImages', require('./delImages'));
+router.use('/images', require('./images'));
 router.post('/update', require('./update'));
 router.get('/:recordId', require('./get'));
 

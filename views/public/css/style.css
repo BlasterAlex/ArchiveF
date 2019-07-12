@@ -11,6 +11,13 @@ article {
     padding: 0 20px;
 }
 
+/* Flash */
+.alert {
+  display: inline-flex; 
+  flex-direction: column; 
+  margin: 10px 10px 10px auto;
+}
+
 /* Message */
 .noRec {
     margin-top: 20px;

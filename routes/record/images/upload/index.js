@@ -1,5 +1,5 @@
 const fs = require('fs');
-var config = require('../../../libs/config');
+var config = require('../../../../libs/config');
 
 // Поиск по массиву
 var getIndex = function (arr, id) {
@@ -38,27 +38,31 @@ var getName = function (record, extension) {
 
 module.exports = function (req, res) {
   fs.readFile(config.jsonPath + config.jsonName, (err, data) => {
-    if (err) res.render('somethingWrong', { textError: require('../../../utils/errorOutput')() });
-    else {
+    if (err) {
+      res.status(404)
+        .render('somethingWrong', { textError: require('../../../../utils/errorOutput')() }, function () {
+          res.send('file not found');
+        });
+    } else {
       var records = JSON.parse(data);
-
       var index = getIndex(records, req.body.id);
+      var newImages = new Array;
+
       if (index === -1) {
-        req.flash('error', 'Элемент не найден!');
-        return res.redirect('/record/' + req.body.id);
+        res.status(404).send('record not found');
       } else {
-        var length = req.files.Images.length;
+        var length = req.files.array.length;
         var oldLength = records[index].addImages.length;
 
         if (length == undefined) { // если всего одна новая картинка
           if (oldLength + 2 > 4) {
-            req.flash('error', 'Запись не может содержать более 4-х картинок!');
-            return res.redirect('/record/' + req.body.id);
+            return res.status(400).send('too many images');
           } else {
-            sampleFile = req.files.Images;
+            sampleFile = req.files.array;
             extension = sampleFile.name.split(/\.(?=[^\.]+$)/)[1];
             imageName = getName(records[index], extension);
             records[index].addImages.push(imageName);
+            newImages.push(imageName);
 
             sampleFile.mv(config.imagePath + imageName, function (err) {
               if (err)
@@ -67,15 +71,15 @@ module.exports = function (req, res) {
           }
         } else { // если несколько
           if (oldLength + length + 1 > 4) {
-            req.flash('error', 'Запись не может содержать более 4-х картинок!');
-            return res.redirect('/record/' + req.body.id);
+            return res.status(400).send('too many images');
           }
           else {
             for (var i = 0; i < length; i++) {
-              let sampleFile = req.files.Images[i];
+              let sampleFile = req.files.array[i];
               extension = sampleFile.name.split(/\.(?=[^\.]+$)/)[1];
               imageName = getName(records[index], extension);
               records[index].addImages.push(imageName);
+              newImages.push(imageName);
 
               sampleFile.mv(config.imagePath + imageName, function (err) {
                 if (err)
@@ -88,9 +92,17 @@ module.exports = function (req, res) {
         // перезапись файла
         let json = JSON.stringify(records, null, 2);
         fs.writeFile(config.jsonPath + config.jsonName, json, (err) => {
-          if (err) res.send("Не удалось записать в JSON файл!");
-          req.flash('notify', 'Запись успешно обновлена');
-          res.redirect('/record/' + req.body.id);
+          if (err) {
+            res.status(404)
+              .render('somethingWrong', { textError: require('../../../../utils/errorOutput')() }, function () {
+                res.send('file not found');
+              });
+          } else
+            res.status(200).send({
+              name: records[index].name,
+              newImages: newImages,
+              isFilled: records[index].addImages.length === 3
+            });
         });
       }
     }
