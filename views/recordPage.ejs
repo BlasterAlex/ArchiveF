@@ -3,6 +3,8 @@
 
 <head>
   <title><%= record.name %></title>
+  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+    integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   <link rel="stylesheet" href="/css/recordPage/style.css" type="text/css">
   <link rel="stylesheet" href="/css/recordPage/photoUpField.css" type="text/css">
   <% include blocks/head.ejs %>
@@ -38,10 +40,13 @@
     <% } else { %>
     <div class="record-page" id="<%= record.id %>">
       <div class="record-imgs">
-        <a href="/<%= record.img %>" id="largePicLink" style="display: none">
-          <img src="/<%= record.img %>" name="<%= record.img %>" id="largePic" onload="imgLoad(this)"
-            onerror="imgError(this)" />
-        </a>
+        <div id="largePicContainer">
+          <img src="/img/accept.jpg" id="recordAccept" style="display: none" />
+          <a href="/<%= record.img %>" id="largePicLink" style="display: none">
+            <img src="/<%= record.img %>" name="<%= record.img %>" id="largePic" onload="imgLoad(this)"
+              onerror="imgError(this)" />
+          </a>
+        </div>
         <div id="thumbs" class="record-imgs-bottom">
           <% record.addImages.forEach(function(img) { %>
           <div class="smallPicContainer" style="display: none;">
@@ -64,8 +69,12 @@
       <div class="record-content">
         <form ref='uploadForm' id='update-form' action='/record/update' method='post' encType="multipart/form-data">
           <h1><%= record.name %></h1>
-          <p>Создано: <%= record.created %></p>
-          <div class="form-group required" id="update-name-field" hidden="true">
+          <div class='record-dates'>
+            <p><b>Создано:</b> <%= record.created %></p>
+            <p <% if (!record.changed) { %> style="display: none" <% } %>><b>Изменено:</b> <span
+                id="record-dateOfChange"><%= record.changed %></span></p>
+          </div>
+          <div class="form-group required" id="update-name-field" style="display: none">
             <input type="name" name="name" class="form-control" id="update-name" placeholder="Enter name"
               value="<%= record.name %>" required>
           </div>
@@ -78,64 +87,49 @@
               <!-- Есть ссылки -->
               <% for (var i = 0, counter = 0; i < record.links.length && i < numOfLinks; i++) { %>
               <li>
-                <a href="<%= record.links[i].url %>" target="_blank">
-                  <p class="record-link">
+                <p class="record-link">
+                  <a href="<%= record.links[i].url %>" target="_blank">
                     <!-- Добавить имя на ссылку, если есть -->
                     <% if (record.links[i].name.length != 0) { %>
                     <%= record.links[i].name %>
                     <% } else { %>
                     link <%= ++counter %>
                     <% } %>
-                  </p>
-                </a>
+                  </a>
+                </p>
               </li>
-              <div class="input-group input-group-rounded" hidden="false">
-                <input type="url" class="form-control url<%= i + 1 %>" name="url" placeholder="Enter your link"
+              <div class="input-group input-group-rounded link-block" style="display: none">
+                <input type="url" class="form-control url-input" name="url" placeholder="Enter your link"
                   value="<%= record.links[i].url %>">
-                <input type="text" class="form-control" name="linkName" placeholder="Name of link (or empty)"
-                  value="<%= record.links[i].name %>">
-                <div class="input-group-button">
+                <input type="text" class="form-control url-name-input" name="linkName"
+                  placeholder="Name of link (or empty)" value="<%= record.links[i].name %>">
+                <div class="input-group-button move-link">
+                  <i class="fa fa-chevron-up"></i>
+                  <i class="fa fa-chevron-down"></i>
+                </div>
+                <div class="input-group-button remove-link">
                   <div class="input-group-text"><img src="/img/red-cross.png" /></div>
                 </div>
               </div>
               <% }; %>
-              <% for (var i = 0, counter = record.links.length + 1; i < numOfLinks - record.links.length; i++, counter++) { %>
-              <div class="input-group input-group-rounded" hidden="true">
-                <input type="url" class="form-control url<%= counter %>" name="url" placeholder="Enter your link">
-                <input type="text" class="form-control" name="linkName" placeholder="Name of link (or empty)">
-                <div class="input-group-button">
-                  <div class="input-group-text"><img src="/img/red-cross.png" /></div>
-                </div>
-              </div>
-              <% }; %>
-              <span id="linksCol" hidden="true"><%= record.links.length %></span>
               <% } else { %>
               <!-- Нет ни одной ссылки -->
               <p id="dot-dot-dot">...</p>
-              <% for (var i = 1; i < numOfLinks + 1; i++) { %>
-              <div class="input-group input-group-rounded" hidden="true">
-                <input type="url" class="form-control url<%= i %>" name="url" placeholder="Enter your link">
-                <input type="text" class="form-control" name="linkName" placeholder="Name of link (or empty)">
-                <div class="input-group-button">
-                  <div class="input-group-text"><img src="/img/red-cross.png" /></div>
-                </div>
-              </div>
-              <% }; %>
-              <span id="linksCol" hidden="true">0</span>
               <% } %>
             </ul>
-            <div class="add-button-container" id="form-add-links-button" hidden="true">
+            <div class="add-button-container" id="form-add-links-button" style="display: none">
               <p style="margin: 2px 0 0 0; font-size: 16px;">Добавить ссылку</p>
               <img src="/img/plus.png" class="form-add-links-button" />
             </div>
           </div>
           <% } %>
           <input type="hidden" name="id" class="form-control" id="id" value="<%= record.id %>" required>
-          <div style="width: 100%; text-align: center"><button type="submit" class="btn btn-primary"
-              id="save-update-button" hidden="true">Сохранить</button></div>
         </form>
-        <div style="width: 100%; text-align: center"><button class="btn btn-success"
-            id="show-update-form">Редактировать</button></div>
+        <div style="width: 100%; text-align: center">
+          <button type="submit" class="btn btn-primary" id="save-update-button" style="display: none">Сохранить</button>
+          <button class="btn btn-warning" id="cancel-changes" style="display: none">Отменить</button>
+          <button class="btn btn-success" id="show-update-form">Редактировать</button>
+        </div>
       </div>
     </div>
     <% } %>

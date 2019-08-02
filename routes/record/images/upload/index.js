@@ -1,5 +1,6 @@
 const fs = require('fs');
 var config = require('../../../../libs/config');
+var dateFormat = require('../../../../utils/dateFormatting');
 
 // Поиск по массиву
 var getIndex = function (arr, id) {
@@ -89,6 +90,10 @@ module.exports = function (req, res) {
           }
         }
 
+        // Дата изменения
+        records[index].changed = dateFormat.dateToString(new Date);
+        records[index].changedInt = dateFormat.stringToDate(records[index].created).getTime();
+
         // перезапись файла
         let json = JSON.stringify(records, null, 2);
         fs.writeFile(config.jsonPath + config.jsonName, json, (err) => {
@@ -101,7 +106,8 @@ module.exports = function (req, res) {
             res.status(200).send({
               name: records[index].name,
               newImages: newImages,
-              isFilled: records[index].addImages.length === 3
+              isFilled: records[index].addImages.length === 3,
+              dateOfChange: records[index].changed
             });
         });
       }

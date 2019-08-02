@@ -1,5 +1,6 @@
 const fs = require('fs');
 var config = require('../../../libs/config');
+var dateFormat = require('../../../utils/dateFormatting');
 
 // Поиск по массиву
 var getIndex = function (arr, id) {
@@ -67,6 +68,10 @@ module.exports = function (req, res) {
           } else {
             records[index].links = links;
           }
+
+          // Дата изменения
+          records[index].changed = dateFormat.dateToString(new Date);
+          records[index].changedInt = dateFormat.stringToDate(records[index].created).getTime();
 
           // Сортировка
           function sortResults(prop, asc) {

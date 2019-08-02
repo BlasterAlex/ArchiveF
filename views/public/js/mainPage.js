@@ -117,7 +117,7 @@ class Pagination {
     if (target.find(this.switch).length === 0)
       target.append(this.switch);
   }
-}
+};
 
 // Главная функция
 $(document).ready(function () {

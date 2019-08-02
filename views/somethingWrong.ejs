@@ -26,8 +26,7 @@
       <% if (textError === "Не найдена папка изображений") { %>
       <h2>Создайте новую, пожалуйста...</h2>
       <div><a href="/create/imgDir" style="font-size: 17px;">Создать новую</a></div>
-      <% } else %>
-      <% if ((textError === "Файл уже был создан!") || (textError === "Папка уже была создана!")) { %>
+      <% } else { %>
       <div><a href="/">На главную</a> </div>
       <% } %>
       <img src='/img/waiting.gif' />

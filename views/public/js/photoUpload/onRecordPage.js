@@ -35,7 +35,11 @@ function submit() {
     dataType: 'json'
   }).done(function (res) { // успех
     $('article').prepend('<div class="alert alert-success"><div>Запись ' + res.name + ' успешно обновлена</div></div>');
-    console.log(res.newImages);
+
+    $('#record-dateOfChange').text(res.dateOfChange); // обновление даты изменения записи
+    if ($('#record-dateOfChange').parent().css('display') === 'none')
+      $('#record-dateOfChange').parent().fadeIn(300);
+
     if (res.isFilled) // если заняты все ячейки
       $('.add_picture_link').fadeOut(300, function () { // скрыть форму добавления фото
         addImages(res.newImages);
@@ -81,10 +85,8 @@ function submit() {
 }
 
 $(document).ready(function () {
-
   beSquare(); // Обновлять при ресайзе
   $(window).resize(function () { beSquare() });
-
 });
 
 // Нажатие на форму

@@ -33,6 +33,10 @@ $(document).on('click', '.recordRedCross', function () {
       if (res.warning) // фото не существует
         $('article').prepend('<div class="alert alert-warning"><div>Изображение ' + photo + ' не существует!</div></div>');
 
+      $('#record-dateOfChange').text(res.dateOfChange); // обновление даты изменения записи
+      if ($('#record-dateOfChange').parent().css('display') === 'none')
+        $('#record-dateOfChange').parent().fadeIn(300);
+
       delBtn.parent().fadeOut(300, function () { // удалить фото на странице
         $(this).remove(); // удаление фото
 
@@ -96,11 +100,55 @@ $(document).on('click', '.smallPic', function () {
     $(this).fadeIn(150);
   });
 
-  $(this).fadeOut(150, function () {
-    this.src = large.src;
-    this.name = large.name;
-    $(this).parents('.smallPicContainer').find('.picName').val(large.name);
+  let smallPic = this;
+  $(this).parents('.smallPicContainer').fadeOut(150, function () {
+    smallPic.src = large.src;
+    smallPic.name = large.name;
+    $(this).find('.picName').val(large.name);
 
-    $(this).fadeIn(150);
+    $(smallPic).fadeIn(150);
+
+    if ($('#recordAccept').css('display') === 'none')
+      $('#recordAccept').fadeIn(300);
+  });
+});
+
+// Применение изменений
+$(document).on('click', '#recordAccept', function () {
+
+  // Сбор данных о текущем расположении картинок
+  var data = {
+    id: $('.record-page').attr('id'),
+    img: $('#largePic').attr('name'),
+    addImages: new Array
+  };
+  $('.smallPic').each(function (i, el) {
+    data.addImages.push($(el).attr('name'));
+  });
+
+  // Отправка запроса на изменение расположения картинок
+  $.ajax({ // отправка запроса на бэк
+    url: '/record/images',
+    method: 'PUT',
+    data: data
+  }).done(function (res) { // успех
+    $('#recordAccept').fadeOut(300);
+
+    $('#record-dateOfChange').text(res.dateOfChange);
+    if ($('#record-dateOfChange').parent().css('display') === 'none')
+      $('#record-dateOfChange').parent().fadeIn(300);
+
+  }).fail(function (res) { // ошибка
+    if (res.status === 404) {
+      switch (res.responseText) {
+        case 'file not found': // обновить окно, на беке тут подключается новый шаблон
+          window.location.reload();
+          break;
+        case 'record not found': // не найдена запись
+          $('article').prepend('<div class="alert alert-danger"><div>Элемент не найден!</div></div>');
+          clearFlash();
+          break;
+      }
+    }
   });
 });

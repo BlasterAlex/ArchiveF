@@ -1,7 +1,10 @@
 const fs = require('fs');
 var config = require('../../libs/config');
+var dateFormat = require('./../../utils/dateFormatting');
 
 module.exports = function (req, res) {
+
+  // console.log(dateFormat.stringToDate("30-04-2019 12:00").getTime());
 
   // Проверка на наличие папки
   var errImgFile = false;

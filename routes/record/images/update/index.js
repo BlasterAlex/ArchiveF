@@ -26,30 +26,10 @@ module.exports = function (req, res) {
       if (index === -1) { // запись не найдена
         res.status(404).send('record not found');
       } else {
-        var picName = req.body.picName;
-        var id = records[index].addImages.indexOf(picName);
-        var warning;
 
-        if (id === -1) { // это главная картинка
-          if (records[index].img === picName) {
-            try {
-              fs.unlinkSync(config.imagePath + picName);
-            } catch (err) {
-              warning = 'image not found';
-            }
-            records[index].img = records[index].addImages[0];
-            records[index].addImages.splice(0, 1);
-          } else {
-            return res.status(404).send('image not found');
-          }
-        } else { // это картинка из блока дополнительных
-          try {
-            fs.unlinkSync(config.imagePath + picName);
-          } catch (err) {
-            warning = 'image not found';
-          }
-          records[index].addImages.splice(id, 1);
-        }
+        // Новые названия картинок
+        records[index].img = req.body.img;
+        records[index].addImages = req.body.addImages;
 
         // Дата изменения
         records[index].changed = dateFormat.dateToString(new Date);
@@ -65,8 +45,6 @@ module.exports = function (req, res) {
               });
           } else
             res.status(200).send({
-              name: records[index].name,
-              warning: warning,
               dateOfChange: records[index].changed
             });
         });
