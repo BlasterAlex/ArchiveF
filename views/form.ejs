@@ -16,7 +16,7 @@
     <% include blocks/header.ejs %>
   </header>
 
-  <article style='text-align: center; padding-top: 40px;'>
+  <article style='text-align: center; padding: 40px 0 20px 0;'>
     <% if (messages.length != 0) { %>
     <div class="alert alert-danger" style="display: inline-flex; flex-direction: column; margin: 0 auto 10px auto;">
       <% for (var i = 0; i < messages.length; i++) { %>
@@ -33,7 +33,7 @@
       <% if (numOfLinks) { %>
       <div class="form-group" id="links-group" style="margin-bottom: 0">
         <label for="inlineFormInputGroupUsername" class="col-sm-2 control-label">Some links</label>
-        <% for (var i = 1; i <= numOfLinks; i++) { %>
+        <!-- <% for (var i = 1; i <= numOfLinks; i++) { %>
         <div class="input-group input-group-rounded" style="display: none">
           <input type="url" class="form-control url<%= i %>" name="url" placeholder="Enter your link">
           <input type="text" class="form-control" name="linkName" placeholder="Name of link (or empty)">
@@ -41,7 +41,7 @@
             <div class="input-group-text"><img src="/img/red-cross.png" class="recordRedCross" /></div>
           </div>
         </div>
-        <% } %>
+        <% } %> -->
         <span id="numOfLinks" hidden="true"><%= numOfLinks %></span>
       </div>
       <div class="add-button-container" id="form-add-links-button">

@@ -39,34 +39,40 @@ module.exports = function (req, res) {
           var links = req.body.url;
           var link_names = req.body.linkName;
 
-          // Если ссылка является простой строкой
-          if (config.numOfLinks == 0 || config.numOfLinks == 1) {
-            links = [links];
-            link_names = [link_names];
-          }
-
-          // Сборка массива ссылок
-          var i = 0;
-          while (i < links.length) {
-            if (links[i] === 'null') {
-              links.splice(i, 1);
-              link_names.splice(i, 1);
-            } else { // добавление названия для непустой ссылки
-              links[i] = {
-                name: "",
-                url: links[i]
-              };
-              if (link_names[i] != 'null')
-                links[i].name = link_names[i];
-              ++i;
-            }
-          }
-
-          // Если максимальное количество ссылок меньше текущего размера массива
-          if (config.numOfLinks < records[index].links.length) {
-            records[index].links = links.concat(records[index].links.splice(config.numOfLinks));
+          // Нет ссылок
+          if (!links) {
+            records[index].links = new Array;
           } else {
-            records[index].links = links;
+
+            // Если ссылка является простой строкой
+            if (!Array.isArray(links)) {
+              links = [links];
+              link_names = [link_names];
+            }
+
+            // Сборка массива ссылок
+            var i = 0;
+            while (i < links.length) {
+              if (links[i] === 'null') {
+                links.splice(i, 1);
+                link_names.splice(i, 1);
+              } else { // добавление названия для непустой ссылки
+                links[i] = {
+                  name: "",
+                  url: links[i]
+                };
+                if (link_names[i] != 'null')
+                  links[i].name = link_names[i];
+                ++i;
+              }
+            }
+
+            // Если максимальное количество ссылок меньше текущего размера массива
+            if (config.numOfLinks < records[index].links.length) {
+              records[index].links = links.concat(records[index].links.splice(config.numOfLinks));
+            } else {
+              records[index].links = links;
+            }
           }
 
           // Дата изменения

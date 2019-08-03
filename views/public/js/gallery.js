@@ -8,6 +8,38 @@ function imgLoad(img) {
   $(img).parent().fadeIn(400);
 }
 
+// Расположение изображений
+class Images {
+  constructor() {
+    this.img = $('#largePic').attr('name');
+
+    let bImages = new Array;
+    $('.smallPic').each(function (i, el) {
+      bImages.push($(el).attr('name'));
+    });
+    this.addImages = bImages;
+  }
+
+  isChanged() { // получение текущего состояния изображений
+    if (this.img == $('#largePic').attr('name')) {
+      let bImages = this.addImages;
+      let check = false;
+
+      $('.smallPic').each(function (i, el) {
+        if ($(el).attr('name') != bImages[i])
+          check = true;
+      });
+
+      return check;
+    } else
+      return true;
+  }
+};
+var images;
+
+// Загрузка страницы
+$(document).ready(function () { images = new Images });
+
 // Удаление изображения
 $(document).on('click', '.recordRedCross', function () {
   let delBtn = $(this);
@@ -57,6 +89,8 @@ $(document).on('click', '.recordRedCross', function () {
                 .animate({ 'opacity': 1 }, 300);
             })
         }
+
+        images = new Images; // сохранение нового состояния изображений
       });
 
       clearFlash();
@@ -105,11 +139,16 @@ $(document).on('click', '.smallPic', function () {
     smallPic.src = large.src;
     smallPic.name = large.name;
     $(this).find('.picName').val(large.name);
-
     $(smallPic).fadeIn(150);
 
-    if ($('#recordAccept').css('display') === 'none')
-      $('#recordAccept').fadeIn(300);
+    // Отображение кнопки Применить изменения
+    if (images.isChanged()) {
+      if ($('#recordAccept').css('display') === 'none')
+        $('#recordAccept').fadeIn(300);
+    } else {
+      if ($('#recordAccept').css('display') !== 'none')
+        $('#recordAccept').fadeOut(300);
+    }
   });
 });
 
@@ -132,9 +171,11 @@ $(document).on('click', '#recordAccept', function () {
     method: 'PUT',
     data: data
   }).done(function (res) { // успех
+
+    images = new Images; // сохранение нового состояния изображений
     $('#recordAccept').fadeOut(300);
 
-    $('#record-dateOfChange').text(res.dateOfChange);
+    $('#record-dateOfChange').text(res.dateOfChange); // обнолвение даты изменения
     if ($('#record-dateOfChange').parent().css('display') === 'none')
       $('#record-dateOfChange').parent().fadeIn(300);
 

@@ -33,36 +33,45 @@ module.exports = function (req, res) {
         var newItem = {
           id: id,
           name: req.body.name,
-          links: req.body.url,
+          links: [],
           img: "",
           addImages: [],
           created: ""
         };
 
-        // Массив названий ссылок
+        // Массивы ссылок
+        var links = req.body.url;
         var link_names = req.body.linkName;
 
-        // Если ссылка является простой строкой
-        if (config.numOfLinks == 0 || config.numOfLinks == 1) {
-          newItem.links = [newItem.links];
-          link_names = [link_names];
-        }
+        // Нет ссылок
+        if (!links) {
+          newItem.links = new Array;
+        } else {
 
-        // Сборка массива ссылок
-        var i = 0;
-        while (i < newItem.links.length) {
-          if (newItem.links[i] === 'null') {
-            newItem.links.splice(i, 1);
-            link_names.splice(i, 1);
-          } else { // добавление названия для непустой ссылки
-            newItem.links[i] = {
-              name: "",
-              url: newItem.links[i]
-            };
-            if (link_names[i] != 'null')
-              newItem.links[i].name = link_names[i];
-            ++i;
+          // Если ссылка является простой строкой
+          if (!Array.isArray(links)) {
+            links = [links];
+            link_names = [link_names];
           }
+
+          // Сборка массива ссылок
+          var i = 0;
+          while (i < links.length) {
+            if (links[i] === 'null') {
+              links.splice(i, 1);
+              link_names.splice(i, 1);
+            } else { // добавление названия для непустой ссылки
+              links[i] = {
+                name: "",
+                url: links[i]
+              };
+              if (link_names[i] != 'null')
+                links[i].name = link_names[i];
+              ++i;
+            }
+          }
+
+          newItem.links = links;
         }
 
         // Проверка на дублирование

@@ -17,26 +17,31 @@ class Content {
 
   isChanged() { // получение текущего состояния контента
     if (this.title == $('#update-name').val()) {
-      let check = false;
-      let bLinks = this.links;
 
+      // Удаление пустых ссылок
       $('.link-block').each(function (i, el) {
-        if (i < bLinks.length) {
+        let input = $(el).find('.url-input');
+        if (!input.val())
+          delLinkInput(input);
+      });
+
+      // Сравнение текущего массива ссылок с начальным
+      if (this.links.length === $('.link-block').length) {
+        let bLinks = this.links;
+        let check = false;
+
+        $('.link-block').each(function (i, el) {
           if ($(el).find('.url-name-input').val() != bLinks[i].name)
             check = true;
           else
             if ($(el).find('.url-input').val() != bLinks[i].url)
               check = true;
-        } else {
-          if ($(el).find('.url-name-input').val())
-            check = true;
-          else
-            if ($(el).find('.url-input').val())
-              check = true;
-        }
-      });
+        });
 
-      return check;
+        return check;
+      } else
+        return true;
+
     } else
       return true;
   }
@@ -143,6 +148,25 @@ function addLinkInput() {
   addValidate();
 }
 
+// Удаление блока ссылки 
+function delLinkInput(elem) {
+  // Очистить поля
+  $(elem).parents('.input-group').children('.form-control').val("");
+
+  // Скрыть элемент
+  $(elem).parents('.input-group').slideUp(300, function () {
+
+    // Удалить текущий элемент
+    $(elem).remove();
+
+    // Обновить индикаторы
+    checkExLinks();
+
+    if ($('.link-block').length != numOfLinks && $('#form-add-links-button').is(':hidden'))
+      $('#form-add-links-button').fadeIn(100);
+  });
+}
+
 $(document).ready(function () {
 
   // Валидация
@@ -184,11 +208,10 @@ $(document).ready(function () {
   });
 
   $('#save-update-button').click(function () { /* сохранение изменений */
-    if (checkValidate()) { // проверка всех полей на валидность
 
+    if (checkValidate()) { // проверка всех полей на валидность
       if (content.isChanged()) { // проверка полей на наличие изменений
         $('.input-group').hide();
-
         $(document.getElementsByName('linkName')).each(function (index, item) {
           if (!$(item).val())
             $(item).val("null");
@@ -197,7 +220,7 @@ $(document).ready(function () {
           if (!$(item).val())
             $(item).val("null");
         });
-      } else {
+      } else { // нет изменений - просто скрыть форму
         content.cancel();
         resetValidatorVal();
         return;
@@ -227,19 +250,5 @@ $(document).on('click', '.fa-chevron-down', function () { /* кнопка Вни
 });
 
 $(document).on('click', '.remove-link', function () { /* крестик на поле ссылки */
-  // Очистить поля
-  $(this).parents('.input-group').children('.form-control').val("");
-
-  // Скрыть элемент
-  $(this).parents('.input-group').slideUp(300, function () {
-
-    // Удалить текущий элемент
-    this.remove();
-
-    // Обновить индикаторы
-    checkExLinks();
-
-    if ($('.link-block').length != numOfLinks && $('#form-add-links-button').is(':hidden'))
-      $('#form-add-links-button').fadeIn(100);
-  });
+  delLinkInput(this);
 });
