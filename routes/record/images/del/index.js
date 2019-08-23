@@ -1,6 +1,6 @@
 const fs = require('fs');
-var config = require('../../../../libs/config');
 var dateFormat = require('../../../../utils/dateFormatting');
+var config = JSON.parse(fs.readFileSync('config/config.json'));
 
 // Поиск по массиву
 var getIndex = function (arr, id) {
@@ -13,7 +13,8 @@ var getIndex = function (arr, id) {
 };
 
 module.exports = function (req, res) {
-  fs.readFile(config.jsonPath + config.jsonName, (err, data) => {
+
+  fs.readFile(config.srcDir + config.rootDir + config.json, (err, data) => {
     if (err) {
       res.status(404)
         .render('somethingWrong', { textError: require('../../../../utils/errorOutput')() }, function () {
@@ -33,7 +34,7 @@ module.exports = function (req, res) {
         if (id === -1) { // это главная картинка
           if (records[index].img === picName) {
             try {
-              fs.unlinkSync(config.imagePath + picName);
+              fs.unlinkSync(config.srcDir + config.rootDir + config.imageDir + picName);
             } catch (err) {
               warning = 'image not found';
             }
@@ -44,7 +45,7 @@ module.exports = function (req, res) {
           }
         } else { // это картинка из блока дополнительных
           try {
-            fs.unlinkSync(config.imagePath + picName);
+            fs.unlinkSync(config.srcDir + config.rootDir + config.imageDir + picName);
           } catch (err) {
             warning = 'image not found';
           }
@@ -57,7 +58,7 @@ module.exports = function (req, res) {
 
         // перезапись файла
         let json = JSON.stringify(records, null, 2);
-        fs.writeFile(config.jsonPath + config.jsonName, json, (err) => {
+        fs.writeFile(config.srcDir + config.rootDir + config.json, json, (err) => {
           if (err) {
             res.status(404)
               .render('somethingWrong', { textError: require('../../../../utils/errorOutput')() }, function () {

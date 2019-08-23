@@ -121,6 +121,10 @@ class Pagination {
 
 // Главная функция
 $(document).ready(function () {
+
+  // Очистка уведомлений
+  clearFlash();
+
   let table = $('table'); // таблица
   let rows = table.find('tbody').find('tr').toArray(); // строки таблицы
 

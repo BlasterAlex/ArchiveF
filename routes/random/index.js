@@ -1,9 +1,10 @@
 const fs = require('fs');
 const random = require('random');
-var config = require('../../libs/config');
+var config = JSON.parse(fs.readFileSync('config/config.json'));
 
 module.exports = function (req, res) {
-  fs.readFile(config.jsonPath + config.jsonName, (err, data) => {
+
+  fs.readFile(config.srcDir + config.rootDir + config.json, (err, data) => {
     if (err) res.render('somethingWrong', { textError: require('../../utils/errorOutput')() });
     else {
       var records = JSON.parse(data);

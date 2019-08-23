@@ -1,10 +1,9 @@
 const fs = require('fs');
-var config = require('../libs/config');
+var config = JSON.parse(fs.readFileSync('config/config.json'))
 
 module.exports = function () { // для вывода сообщения об ошибке
-  if (fs.existsSync(config.jsonPath)) {
+  if (fs.existsSync(config.srcDir + config.rootDir))
     return "Не найден файл JSON";
-  }
-  else return "Не найдена папка с базой";
+  return "Не найдена папка с базой";
 }
 

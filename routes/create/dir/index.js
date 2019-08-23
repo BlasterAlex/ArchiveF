@@ -1,24 +1,26 @@
 const fs = require('fs');
-var config = require('./../../../libs/config');
+var config = JSON.parse(fs.readFileSync('config/config.json'));
 
-module.exports=function (req, res) {
-    fs.readFile(config.jsonPath + config.jsonName, (err, data) => {
+module.exports = function (req, res) {
+
+  fs.readFile(config.srcDir + config.rootDir + config.json, (err, data) => {
+    if (err) {
+      fs.mkdir(config.srcDir + config.rootDir, (err) => { // создание папки
         if (err)
-        {
-            fs.mkdir(config.jsonPath, (err) => { // создание папки
-                if (err) res.render ('somethingWrong', {textError: 'Не удалось создать папку!'});
-                fs.mkdirSync(config.imagePath); // создание папки для фото
+          return res.render('somethingWrong', { textError: 'Не удалось создать папку!' });
 
-                var records = [] // создание пустого JSON файла
-                let json = JSON.stringify(records, null, 2);
+        fs.mkdirSync(config.srcDir + config.rootDir + config.imageDir); // создание папки для фото
 
-                fs.writeFile(config.jsonPath + config.jsonName, json, (err) => {
-                    if (err) res.render ('somethingWrong', {textError: 'Не удалось записать в JSON файл!'});    
-                    res.redirect('/');
-                });
-                
-            });
-        }
-        else res.render ('somethingWrong', {textError: 'Папка уже была создана!'});
-    });
+        var records = [] // создание пустого JSON файла
+        let json = JSON.stringify(records, null, 2);
+
+        fs.writeFile(config.srcDir + config.rootDir + config.json, json, (err) => {
+          if (err) res.send("Не удалось записать в JSON файл!");
+          res.redirect('/');
+        });
+
+      });
+    }
+    else res.render('somethingWrong', { textError: 'Папка уже была создана!' });
+  });
 }

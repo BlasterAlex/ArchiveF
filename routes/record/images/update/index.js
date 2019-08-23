@@ -1,5 +1,5 @@
 const fs = require('fs');
-var config = require('../../../../libs/config');
+var config = JSON.parse(fs.readFileSync('config/config.json'));
 var dateFormat = require('../../../../utils/dateFormatting');
 
 // Поиск по массиву
@@ -13,7 +13,8 @@ var getIndex = function (arr, id) {
 };
 
 module.exports = function (req, res) {
-  fs.readFile(config.jsonPath + config.jsonName, (err, data) => {
+
+  fs.readFile(config.srcDir + config.rootDir + config.json, (err, data) => {
     if (err) {
       res.status(404)
         .render('somethingWrong', { textError: require('../../../../utils/errorOutput')() }, function () {
@@ -37,7 +38,7 @@ module.exports = function (req, res) {
 
         // перезапись файла
         let json = JSON.stringify(records, null, 2);
-        fs.writeFile(config.jsonPath + config.jsonName, json, (err) => {
+        fs.writeFile(config.srcDir + config.rootDir + config.json, json, (err) => {
           if (err) {
             res.status(404)
               .render('somethingWrong', { textError: require('../../../../utils/errorOutput')() }, function () {

@@ -1,0 +1,11 @@
+{
+  "port": 3000,
+  "srcDir": "src/",
+  "rootDir": "first/",
+  "imageDir": "image/",
+  "json": "src.json",
+  "about": "about.json",
+  "avatarName": "avatar",
+  "numOfLinks": 6,
+  "rowsShown": 10
+}

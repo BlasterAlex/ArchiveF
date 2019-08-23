@@ -1,13 +1,13 @@
 const fs = require('fs');
 var uniqid = require('uniqid');
-var config = require('./../../../libs/config');
+var config = JSON.parse(fs.readFileSync('config/config.json'));
 var dateFormat = require('./../../../utils/dateFormatting');
 
 module.exports = function (req, res) {
 
   // Проверка на наличие папки
   var errImgFile = false;
-  fs.readFile(config.imagePath, (err, data) => {
+  fs.readFile(config.srcDir + config.rootDir + config.imageDir, (err, data) => {
     if (err.syscall != "read") {
       errImgFile = true;
     }
@@ -15,7 +15,7 @@ module.exports = function (req, res) {
   if (errImgFile) return res.render('somethingWrong', { textError: "Не найдена папка изображений" });
 
   // Добавление новой записи
-  fs.readFile(config.jsonPath + config.jsonName, (err, data) => {
+  fs.readFile(config.srcDir + config.rootDir + config.json, (err, data) => {
     if (err) res.render('somethingWrong', { textError: require('../../../utils/errorOutput')() });
     else {
       var records = JSON.parse(data);
@@ -92,7 +92,7 @@ module.exports = function (req, res) {
             imageName = id + "." + extension;
             newItem.img = imageName;
 
-            sampleFile.mv(config.imagePath + imageName, function (err) {
+            sampleFile.mv(config.srcDir + config.rootDir + config.imageDir + imageName, function (err) {
               if (err)
                 return res.status(500).send(err);
             })
@@ -107,7 +107,7 @@ module.exports = function (req, res) {
             imageName = id + "." + extension;
             newItem.img = imageName;
 
-            sampleFile.mv(config.imagePath + imageName, function (err) {
+            sampleFile.mv(config.srcDir + config.rootDir + config.imageDir + imageName, function (err) {
               if (err)
                 return res.status(500).send(err);
             });
@@ -117,7 +117,7 @@ module.exports = function (req, res) {
               extension = sampleFile.name.split(/\.(?=[^\.]+$)/)[1];
               imageName = id + i + "." + extension;
 
-              sampleFile.mv(config.imagePath + imageName, function (err) {
+              sampleFile.mv(config.srcDir + config.rootDir + config.imageDir + imageName, function (err) {
                 if (err)
                   return res.status(500).send(err);
               })
@@ -143,7 +143,7 @@ module.exports = function (req, res) {
 
           // Перезапись файла
           let json = JSON.stringify(records, null, 2);
-          fs.writeFile(config.jsonPath + config.jsonName, json, (err) => {
+          fs.writeFile(config.srcDir + config.rootDir + config.json, json, (err) => {
             if (err) res.send("Не удалось записать в JSON файл!");
             req.flash('notify', 'Запись "' + newItem.name + '" успешно добавлена');
             res.redirect('/');

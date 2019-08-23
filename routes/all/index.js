@@ -1,6 +1,6 @@
 const fs = require('fs');
-var config = require('../../libs/config');
-var dateFormat = require('./../../utils/dateFormatting');
+var config = JSON.parse(fs.readFileSync('config/config.json'));
+// var dateFormat = require('./../../utils/dateFormatting');
 
 module.exports = function (req, res) {
 
@@ -8,13 +8,13 @@ module.exports = function (req, res) {
 
   // Проверка на наличие папки
   var errImgFile = false;
-  fs.readFile(config.imagePath, (err, data) => {
+  fs.readFile(config.srcDir + config.rootDir + config.imageDir, (err) => {
     if (err.syscall != "read") {
       errImgFile = true;
     }
   });
 
-  fs.readFile(config.jsonPath + config.jsonName, (err, data) => {
+  fs.readFile(config.srcDir + config.rootDir + config.json, (err, data) => {
     if (err) res.render('somethingWrong', { textError: require('../../utils/errorOutput')() });
     else if (!errImgFile) {
       var records = JSON.parse(data);

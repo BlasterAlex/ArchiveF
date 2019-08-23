@@ -15,6 +15,7 @@
   "author": "Alex Pish",
   "license": "MIT",
   "dependencies": {
+    "7zip-bin": "^5.0.3",
     "autoprefixer": "^9.4.5",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.3",
@@ -22,8 +23,11 @@
     "express": "^4.16.4",
     "express-fileupload": "^1.0.0",
     "express-session": "^1.15.6",
+    "moment": "^2.24.0",
+    "node-7z": "^1.1.1",
     "random": "^2.0.13",
     "reloader": "^1.0.2",
+    "rimraf": "^3.0.0",
     "uniqid": "^5.0.3"
   },
   "devDependencies": {
