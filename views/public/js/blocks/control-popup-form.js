@@ -310,7 +310,18 @@ function changeOnBaseCard(old, data) { // блок базы
 
   // Задание свойств для новой карты
   cardResize(image, '.control-card-img');
-  aCard.find('.card-description').css('height', card['text-height']);
+  let description = aCard.find('.card-description');
+
+  // Проверка высоты текста описания
+  aCard.show(function () {
+    var actualHeight = description.height();
+    description.css('height', card['text-height']);
+
+    if (description.height() < actualHeight)
+      description.after('<span class="card-description-readmore">(Читать далее)</span>')
+
+    $(this).hide();
+  })
 
   // Отображение новой карты
   aCard.fadeIn(300);
@@ -647,20 +658,21 @@ $(document).on('click', '.card-button-remove', function () {
   let cardButtons = $(this).closest('.card-buttons-block');
 
   // Сбор данных для отправки
-  let data = {
-    baseName: $(this).closest('.row').find('.card-title').text(),
-  };
+  let data = { baseName: $(this).closest('.row').find('.card-title').text() };
 
-  // Проверка активности текущей базы
-  if (cardButtons.find('.btn-success').prop("disabled")) { // база активна
-    createActiveBaseSelForm(data.baseName);
-  } else { // база не активна или это архив
-    // Выбор действия
-    if (cardButtons.find('.btn-warning').text() === 'Архивировать') { // это база
-      data.repBase = false;
-      removeBase(data);
-    } else { // это архив
-      removeArchive(data.baseName);
+  if (confirm("Вы действительно хотите удалить " + data.baseName + "?") === true) {
+
+    // Проверка активности текущей базы
+    if (cardButtons.find('.btn-success').prop("disabled")) { // база активна
+      createActiveBaseSelForm(data.baseName);
+    } else { // база не активна или это архив
+      // Выбор действия
+      if (cardButtons.find('.btn-warning').text() === 'Архивировать') { // это база
+        data.repBase = false;
+        removeBase(data);
+      } else { // это архив
+        removeArchive(data.baseName);
+      }
     }
   }
 });

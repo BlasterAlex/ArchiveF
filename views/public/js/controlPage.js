@@ -19,6 +19,7 @@ function changeAvatar(where, image) {
 function cardResize(el, elClass) {
   el.css('height', cardsHeight[el.index(elClass)]);
   el.find('.control-card-base-avatar').css('height', cardsHeight[el.index(elClass)]);
+  console.log(cardsHeight[el.index(elClass)]);
 }
 
 // (Де-)Активирование кнопки:
@@ -239,7 +240,7 @@ $(document).on('click', '.card-description-readmore', function () {
     let parent = $(this).closest('.control-card');
     let img = parent.find('.control-card-img');
     img.height(0);
-    cardsHeight[img.index('.control-card-img')] = parent.height();
+    cardsHeight[img.index('.control-card-img')] = parent.height() + 16; // учитывая margin для .control-card-img p
     cardResize(img, '.control-card-img');
 
     // Анимация скрытия полного текста описания
