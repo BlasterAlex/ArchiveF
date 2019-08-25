@@ -1,8 +1,8 @@
 # ArchiveF
 
-[![License: MIT](https://img.shields.io/github/license/BlasterAlex/ArchiveF.svg)](https://opensource.org/licenses/MIT)
-![npm](https://img.shields.io/npm/v/npm.svg)
-<!-- ![GitHub package.json version](https://img.shields.io/github/package-json/v/BlasterAlex/archivef.svg) -->
+[![GitHub](https://img.shields.io/github/license/BlasterAlex/ArchiveF)](https://github.com/BlasterAlex/ArchiveF/blob/master/LICENSE.md)
+[![npm](https://img.shields.io/npm/v/npm?color=orange)](https://github.com/npm/cli/releases/latest)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/BlasterAlex/ArchiveF)](https://github.com/BlasterAlex/ArchiveF/releases/latest)
 
 `ArchiveF` - это веб-приложение, которое позволяет работать с файловой [“базой данных”](https://github.com/BlasterAlex/ArchiveF/wiki/%D0%A5%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5-%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85)  в формате JSON.
 
