@@ -37,6 +37,46 @@ function changeBtnState(btn) {
   });
 }
 
+// Окно на всю страницу с красивой анимацией
+function createFullPagePopup(text) {
+  $('article').append('<div class="control-popup-background">' +
+    '  <div class="card mb-3 control-popup-password" style="padding: 0; display: none; max-width: 500px">' +
+    '    <p class="control-popup-message" style="margin: 20px 20px">' + text + '</p>' +
+    '  </div>' +
+    '</div>');
+
+  $('.control-popup-background').fadeIn(300, function () {
+    let block = $(this).find('.control-popup-password');
+    let saved = block.css(['overflow', 'height']);
+
+    block.css({
+      'height': 0,
+      'display': 'block',
+      'overflow': 'scroll'
+    });
+
+    let actualHeight = block.prop('scrollHeight');
+    block.css('overflow', saved['overflow']);
+    block.animate({ 'height': actualHeight }, 150, function () {
+
+      // Каждую букву слова обернуть в span
+      let textWrapper = document.querySelector('.control-popup-message');
+      textWrapper.innerHTML = textWrapper.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
+
+      anime.timeline({ loop: false })
+        .add({
+          targets: '.control-popup-message .letter',
+          opacity: [0, 1],
+          easing: "easeInOutQuad",
+          duration: 10,
+          delay: function (el, i) {
+            return 50 * (i + 1)
+          }
+        });
+    });
+  });
+}
+
 // Главная функция
 $(document).ready(function () {
 
@@ -221,7 +261,9 @@ $(document).on('click', '.card-button-activate', function () {
     method: 'POST',
     data: data
   }).done(function (res) { // успех
-    $('article').prepend('<div class="alert alert-success"><div>База ' + res.baseName + ' успешно активирована.<br>Перезагрузите приложение для применения изменений</div></div>');
+
+    // Окно с сообщением
+    createFullPagePopup('База "' + res.baseName + '" успешно активирована. Перезапустите сервис для применения изменений.');
 
     // Снятие акивации со всех баз
     $('.control-card').each(function () {
@@ -245,6 +287,7 @@ $(document).on('click', '.card-button-activate', function () {
       isActive: false,
       newText: 'Активна'
     });
+
   }).fail(function (res) { // ошибка
     switch (res.status) {
       case 404: // не найдено

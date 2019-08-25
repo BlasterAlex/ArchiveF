@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/random', require('./random'));
 router.get('/del', require('./del/get'));
+router.get('/random', require('./random'));
 router.post('/delete', require('./del'));
 
 router.use('/add', require('./add'));

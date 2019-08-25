@@ -1,6 +1,8 @@
+/* ------------- Cards ------------- */
+
 .control-article {
   text-align: center; 
-  padding: 40px 0 20px 0;
+  padding: 40px 0 40px 0;
 }
 
 .card {
@@ -10,7 +12,7 @@
 }
 
 .card.active {
-  box-shadow: 0px 0px 30px rgba(0, 200, 0, 0.2);
+  box-shadow: 0px 0px 40px rgba(0, 200, 0, 0.4);
 }
 
 .control-content {
@@ -95,7 +97,8 @@
   margin-bottom: 0;
 }
 
-/* Buttons */
+/* ------------- Buttons ------------- */
+
 .btn[disabled] {
   transition: all 0.2s;
   color: black;
@@ -111,7 +114,39 @@
   display: inline-block !important;
 }
 
-/* Всплывающие окна */
+.control-add-button-container {
+  display: flex;
+  max-width: 150px;
+  padding: 5px;
+  justify-content: space-around;
+  background-color: #e6eaed;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  margin: 3px auto 0 auto;
+  margin-bottom: 15px;
+  transition: all 0.2s;
+}
+
+.control-add-button-container:hover {
+  opacity: 0.9;
+  cursor: pointer;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.control-add-button-container p {
+  font-size: 16px;
+  margin: 2px 2px 0 0;
+}
+
+.control-form-add-button {
+  align-self: center;
+  max-width: 30px;
+  height: auto;
+}
+
+/* ------------- Popups ------------- */
+
 .control-popup-background {
   background-color: rgba(255, 255, 255, 0.9);
   position: fixed;
@@ -128,7 +163,7 @@
   margin-bottom: 20px;
 }
 
-.close-popup-password {
+.close-popup {
   position: absolute;
   top: 15px;
   right: 15px;
@@ -136,7 +171,7 @@
   opacity: 0.7;
 }
 
-.close-popup-password:hover {
+.close-popup:hover {
   cursor: pointer;
   opacity: 1;
 }
@@ -169,4 +204,32 @@
 .show-password:hover {
   cursor: pointer;
   opacity: 1;
+}
+
+/* ------------- Select base popup ------------- */
+
+.control-popup-select {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  padding: 20px;
+  padding-top: 12px;
+}
+.base-on-popup {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+/* ------------- Loader ------------- */
+
+.control-loader {
+  position: fixed;
+  display: none;
+  width: 400px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -70%);
 }

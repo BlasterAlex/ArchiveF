@@ -19,7 +19,11 @@ module.exports = function (req, res) {
     else if (!errImgFile) {
       var records = JSON.parse(data);
 
-      res.render('main', { records: records, errors: req.flash('error'), messages: req.flash('notify') });
+      res.render('main', {
+        records: records,
+        errors: req.flash('error'),
+        messages: req.flash('notify')
+      });
     } else
       res.render('somethingWrong', { textError: "Не найдена папка изображений" });
   });

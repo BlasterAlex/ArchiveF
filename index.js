@@ -29,6 +29,7 @@ app.use(flash());
 
 // Глобальные переменные
 app.use(function (req, res, next) {
+  res.locals.baseName = config.rootDir.split('/')[0];
   res.locals.numOfLinks = config.numOfLinks;
   res.locals.rowsShown = config.rowsShown;
   next();
