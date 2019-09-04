@@ -5,5 +5,5 @@ node_js:
   - node
 
 script:
-  - npm lint
-  - npm test
+  - npm run lint
+  - npm run test
