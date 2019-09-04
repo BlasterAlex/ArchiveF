@@ -12,8 +12,8 @@ module.exports = function (req, res) {
       if (check != undefined) {
         res.render('recordPage', { record: check, errors: req.flash('error'), messages: req.flash('notify') });
       } else {
-        res.render('somethingWrong', { textError: "Такого элемента нет!" });
+        res.render('somethingWrong', { textError: 'Такого элемента нет!' });
       }
     }
   });
-}
+};

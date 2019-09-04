@@ -17,7 +17,7 @@ $(document).ready(function () {
 
   // Нажатие на форму
   dropZone.click(function () {
-    document.getElementById("file-input").click();
+    document.getElementById('file-input').click();
   });
 
   dropZone.on('drag dragstart dragend dragover dragenter dragleave drop', function () {

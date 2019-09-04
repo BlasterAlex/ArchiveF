@@ -7,12 +7,12 @@ module.exports = function (req, res) {
 
   // Проверка на наличие папки
   var errImgFile = false;
-  fs.readFile(config.srcDir + config.rootDir + config.imageDir, (err, data) => {
-    if (err.syscall != "read") {
+  fs.readFile(config.srcDir + config.rootDir + config.imageDir, (err) => {
+    if (err.syscall != 'read') {
       errImgFile = true;
     }
   });
-  if (errImgFile) return res.render('somethingWrong', { textError: "Не найдена папка изображений" });
+  if (errImgFile) return res.render('somethingWrong', { textError: 'Не найдена папка изображений' });
 
   // Добавление новой записи
   fs.readFile(config.srcDir + config.rootDir + config.json, (err, data) => {
@@ -34,9 +34,9 @@ module.exports = function (req, res) {
           id: id,
           name: req.body.name,
           links: [],
-          img: "",
+          img: '',
           addImages: [],
-          created: ""
+          created: ''
         };
 
         // Массивы ссылок
@@ -62,7 +62,7 @@ module.exports = function (req, res) {
               link_names.splice(i, 1);
             } else { // добавление названия для непустой ссылки
               links[i] = {
-                name: "",
+                name: '',
                 url: links[i]
               };
               if (link_names[i] != 'null')
@@ -89,13 +89,13 @@ module.exports = function (req, res) {
           if (length == undefined) { // если всего одна картинка
             sampleFile = req.files.Images;
             extension = sampleFile.name.split(/\.(?=[^\.]+$)/)[1];
-            imageName = id + "." + extension;
+            imageName = id + '.' + extension;
             newItem.img = imageName;
 
             sampleFile.mv(config.srcDir + config.rootDir + config.imageDir + imageName, function (err) {
               if (err)
                 return res.status(500).send(err);
-            })
+            });
           } else if (length > 4) {
             req.flash('error', 'Вы не можете загрузить более 4-х картинок!');
             return res.redirect('/add');
@@ -104,7 +104,7 @@ module.exports = function (req, res) {
 
             sampleFile = imgs[0];
             extension = sampleFile.name.split(/\.(?=[^\.]+$)/)[1];
-            imageName = id + "." + extension;
+            imageName = id + '.' + extension;
             newItem.img = imageName;
 
             sampleFile.mv(config.srcDir + config.rootDir + config.imageDir + imageName, function (err) {
@@ -112,15 +112,15 @@ module.exports = function (req, res) {
                 return res.status(500).send(err);
             });
 
-            for (var i = 1; i < imgs.length; i++) {
+            for (var j = 1; j < imgs.length; i++) {
               let sampleFile = imgs[i];
               extension = sampleFile.name.split(/\.(?=[^\.]+$)/)[1];
-              imageName = id + i + "." + extension;
+              imageName = id + j + '.' + extension;
 
               sampleFile.mv(config.srcDir + config.rootDir + config.imageDir + imageName, function (err) {
                 if (err)
                   return res.status(500).send(err);
-              })
+              });
               newItem.addImages.push(imageName);
             }
           }
@@ -130,7 +130,7 @@ module.exports = function (req, res) {
           records.push(newItem);
 
           // Сортировка
-          function sortResults(prop, asc) {
+          function sortResults(prop, asc) { // eslint-disable-line
             records = records.sort(function (a, b) {
               if (asc) {
                 return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
@@ -144,12 +144,12 @@ module.exports = function (req, res) {
           // Перезапись файла
           let json = JSON.stringify(records, null, 2);
           fs.writeFile(config.srcDir + config.rootDir + config.json, json, (err) => {
-            if (err) res.send("Не удалось записать в JSON файл!");
+            if (err) res.send('Не удалось записать в JSON файл!');
             req.flash('notify', 'Запись "' + newItem.name + '" успешно добавлена');
             res.redirect('/');
           });
         }
       }
     }
-  })
-}
+  });
+};

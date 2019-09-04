@@ -1,7 +1,7 @@
 // Числа фиксированной длины (2 символа)
 function formatNum(num) {
-  return ("0" + num).slice(-2);
-};
+  return ('0' + num).slice(-2);
+}
 
 // Получение строки
 module.exports.dateToString = function dateToString(date) {

@@ -33,9 +33,8 @@ class Content {
         $('.link-block').each(function (i, el) {
           if ($(el).find('.url-name-input').val() != bLinks[i].name)
             check = true;
-          else
-            if ($(el).find('.url-input').val() != bLinks[i].url)
-              check = true;
+          else if ($(el).find('.url-input').val() != bLinks[i].url)
+            check = true;
         });
 
         return check;
@@ -76,7 +75,7 @@ class Content {
     // Показать кнопку редактирования
     $('#show-update-form').fadeIn(300);
   }
-};
+}
 var content;
 
 // Вадидация для всех полей ссылок
@@ -151,7 +150,7 @@ function addLinkInput() {
 // Удаление блока ссылки 
 function delLinkInput(elem) {
   // Очистить поля
-  $(elem).parents('.input-group').children('.form-control').val("");
+  $(elem).parents('.input-group').children('.form-control').val('');
 
   // Скрыть элемент
   $(elem).parents('.input-group').slideUp(300, function () {
@@ -164,6 +163,59 @@ function delLinkInput(elem) {
 
     if ($('.link-block').length != numOfLinks && $('#form-add-links-button').is(':hidden'))
       $('#form-add-links-button').fadeIn(100);
+  });
+}
+
+// Окно с паролем
+function createPasswordWindow(password, link) {
+  // Создание всплывающего окна
+  $('article').append(
+    '<div class="record-popup-background">' +
+    '  <div class="card mb-3 record-popup-password">' +
+    '    <img src="/img/close-cross.svg" class="close-popup">' +
+    '    <div class="popup-password-picture-wrapper">' +
+    '      <img src = "/img/lock.webp" > ' +
+    '    </div>' +
+    '    <div class="popup-content">' +
+    '      <h3>Файлы по ссылке зашифрованы</h3>' +
+    '      <h4>Пароль: ' + password + '</h4>' +
+    '       <div class="popup-buttons-block">' +
+    '         <button class="btn btn-warning popup-button-copy">Копировать пароль</button>' +
+    '         <a class="linkFromPopup" href="' + link + '" target="_blank">' +
+    '           <button class="btn btn-success popup-button-follow">Перейти по ссылке</button>' +
+    '         </a>' +
+    '       </div>' +
+    '    </div>' +
+    '  </div>' +
+    '</div>')
+    .find('.record-popup-background')
+    .fadeIn(300);
+
+  // Кнопка Копировать пароль
+  $('.popup-button-copy').click(function () {
+
+    navigator.clipboard.writeText(password)
+      .then(() => {
+        $('article').prepend('<div class="alert alert-success" style="position: fixed; z-index: 1000; top: 8%; left: 43%;">' +
+          '<div>Пароль скопирован</div></div> ');
+        clearFlash();
+
+        changeBtnState({
+          obj: $(this),
+          isActive: true,
+          newText: 'Скопировано'
+        });
+      })
+      .catch(err => {
+        $('article').prepend('<div class="alert alert-danger" style="position: fixed; z-index: 1000; top: 8%; left: 43%;">' +
+          '<div>' + err + '</div></div> ');
+        clearFlash();
+      });
+  });
+
+  // Кнопка Перейти по ссылке
+  $('.popup-button-follow').click(function () {
+    console.log(link);
   });
 }
 
@@ -214,11 +266,11 @@ $(document).ready(function () {
         $('.input-group').hide();
         $(document.getElementsByName('linkName')).each(function (index, item) {
           if (!$(item).val())
-            $(item).val("null");
+            $(item).val('null');
         });
         $(document.getElementsByName('url')).each(function (index, item) {
           if (!$(item).val())
-            $(item).val("null");
+            $(item).val('null');
         });
       } else { // нет изменений - просто скрыть форму
         content.cancel();
@@ -251,4 +303,31 @@ $(document).on('click', '.fa-chevron-down', function () { /* кнопка Вни
 
 $(document).on('click', '.remove-link', function () { /* крестик на поле ссылки */
   delLinkInput(this);
+});
+
+$(document).on('click', '.record-link a[href]', function (e) { /* переход по ссылке */
+
+  // Поиск пароля в названии ссылки
+  let regex = /password:([^)]+)/g;
+  let found = $(this).text().trim().match(regex);
+
+  // Пароль найден
+  if (found) {
+    let password = found[0].split(':')[1];
+
+    if (password && password.length) {
+      createPasswordWindow(password.trim(), $(this).attr('href'));
+
+      // Отключить переход по ссылке
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+  }
+});
+
+$(document).on('click', '.close-popup', function () { // закрыть всплывающее окно
+  $(this).closest('.record-popup-background').fadeOut(300, function () {
+    $(this).remove();
+  });
 });

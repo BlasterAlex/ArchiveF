@@ -19,23 +19,6 @@ function changeAvatar(where, image) {
 function cardResize(el, elClass) {
   el.css('height', cardsHeight[el.index(elClass)]);
   el.find('.control-card-base-avatar').css('height', cardsHeight[el.index(elClass)]);
-  console.log(cardsHeight[el.index(elClass)]);
-}
-
-// (Де-)Активирование кнопки:
-// btn = {
-//   obj: <jquery el>,
-//   isActive: <current active state>,
-//   newText: <new btn text>
-// }
-function changeBtnState(btn) {
-  btn.obj.fadeOut(200, function () {
-    $(this).prop("disabled", !btn.isActive);
-    $(this).text(btn.newText);
-
-    if (!btn.isActive) $(this).prepend('<i class="fa fa-check"></i>');
-    $(this).fadeIn(200);
-  });
 }
 
 // Окно на всю страницу с красивой анимацией
@@ -62,16 +45,16 @@ function createFullPagePopup(text) {
 
       // Каждую букву слова обернуть в span
       let textWrapper = document.querySelector('.control-popup-message');
-      textWrapper.innerHTML = textWrapper.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
+      textWrapper.innerHTML = textWrapper.textContent.replace(/\S/g, '<span class=\'letter\'>$&</span>');
 
       anime.timeline({ loop: false })
         .add({
           targets: '.control-popup-message .letter',
           opacity: [0, 1],
-          easing: "easeInOutQuad",
+          easing: 'easeInOutQuad',
           duration: 10,
           delay: function (el, i) {
-            return 50 * (i + 1)
+            return 50 * (i + 1);
           }
         });
     });
@@ -87,9 +70,9 @@ $(document).ready(function () {
     let icon = $(this).find('.control-card-icon');
     let text = $(this).find('p');
 
-    let avatarSrc = $(this).find('.control-card-base-avatar').attr("src");
-    if (avatarSrc === "false" || avatarSrc === "img/default.jpg") {
-      icon.attr('src', "img/base-download.png");
+    let avatarSrc = $(this).find('.control-card-base-avatar').attr('src');
+    if (avatarSrc === 'false' || avatarSrc === 'img/default.jpg') {
+      icon.attr('src', 'img/base-download.png');
       text.text('Загрузить аватарку');
     }
 
@@ -117,7 +100,7 @@ $(document).ready(function () {
     element.css('max-height', saved['max-height']);
 
     if (element.height() < actualHeight) {
-      element.after('<span class="card-description-readmore">(Читать далее)</span>')
+      element.after('<span class="card-description-readmore">(Читать далее)</span>');
     }
   });
 });
@@ -180,7 +163,7 @@ $(document).on('change', '.control-card-img', function () {
 
     // Обновление иконки аватарки
     let controlCard = avatarEl.closest('.control-card-img');
-    controlCard.find('.control-card-icon').attr('src', "img/base-refresh.png");
+    controlCard.find('.control-card-icon').attr('src', 'img/base-refresh.png');
     controlCard.find('p').text('Изменить аватарку');
 
     // Обновление даты изменения базы
@@ -251,56 +234,60 @@ $(document).on('click', '.card-description-readmore', function () {
 // Активирование базы
 $(document).on('click', '.card-button-activate', function () {
 
-  // Сбор данных для отправки
-  let data = {
-    baseName: $(this).closest('.row').find('.card-title').text()
-  };
+  let baseName = $(this).closest('.row').find('.card-title').text();
+  if (confirm('Вы действительно хотите активировать ' + baseName + '?') === true) {
 
-  // Отправка запроса на бэк
-  $.ajax({ // отправка запроса на бэк
-    url: '/control/base/update/status',
-    method: 'POST',
-    data: data
-  }).done(function (res) { // успех
+    // Сбор данных для отправки
+    let data = {
+      baseName: baseName
+    };
 
-    // Окно с сообщением
-    createFullPagePopup('База "' + res.baseName + '" успешно активирована. Перезапустите сервис для применения изменений.');
+    // Отправка запроса на бэк
+    $.ajax({ // отправка запроса на бэк
+      url: '/control/base/update/status',
+      method: 'POST',
+      data: data
+    }).done(function (res) { // успех
 
-    // Снятие акивации со всех баз
-    $('.control-card').each(function () {
-      if ($(this).hasClass('active')) {
-        $(this).removeClass('active');
+      // Окно с сообщением
+      createFullPagePopup('База "' + res.baseName + '" успешно активирована. Перезапустите сервис для применения изменений.');
 
-        changeBtnState({
-          obj: $(this).find('.card-button-activate'),
-          isActive: true,
-          newText: 'Активировать'
-        });
+      // Снятие акивации со всех баз
+      $('.control-card').each(function () {
+        if ($(this).hasClass('active')) {
+          $(this).removeClass('active');
+
+          changeBtnState({
+            obj: $(this).find('.card-button-activate'),
+            isActive: false,
+            newText: 'Активировать'
+          });
+        }
+      });
+
+      // Активация выбранной базы
+      let card = $(document.getElementsByName(res.baseName));
+      card.closest('.control-card').addClass('active');
+
+      changeBtnState({
+        obj: card.find('.card-button-activate'),
+        isActive: true,
+        newText: 'Активна'
+      });
+
+    }).fail(function (res) { // ошибка
+      switch (res.status) {
+        case 404: // не найдено
+          if (res.responseText === 'base not found') {
+            $('article').prepend('<div class="alert alert-danger"><div>База не найдена!</div></div>');
+            clearFlash();
+          }
+          break;
+        case 505: // ошибка сервера
+          $('article').prepend('<div class="alert alert-danger"><div>' + res.responseText + '</div></div>');
+          clearFlash();
+          break;
       }
     });
-
-    // Активация выбранной базы
-    let card = $(document.getElementsByName(res.baseName));
-    card.closest('.control-card').addClass('active');
-
-    changeBtnState({
-      obj: card.find('.card-button-activate'),
-      isActive: false,
-      newText: 'Активна'
-    });
-
-  }).fail(function (res) { // ошибка
-    switch (res.status) {
-      case 404: // не найдено
-        if (res.responseText === 'base not found') {
-          $('article').prepend('<div class="alert alert-danger"><div>База не найдена!</div></div>');
-          clearFlash();
-        }
-        break;
-      case 505: // ошибка сервера
-        $('article').prepend('<div class="alert alert-danger"><div>' + res.responseText + '</div></div>');
-        clearFlash();
-        break;
-    }
-  });
+  }
 });

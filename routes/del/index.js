@@ -4,7 +4,7 @@ var config = JSON.parse(fs.readFileSync('config/config.json'));
 module.exports = function (req, res) {
 
   fs.readFile(config.srcDir + config.rootDir + config.json, (err, data) => {
-    if (err) res.send("Не удалось открыть JSON файл!");
+    if (err) res.send('Не удалось открыть JSON файл!');
     else {
       var records = JSON.parse(data);
       var name = records[req.body.sel].name;
@@ -28,10 +28,10 @@ module.exports = function (req, res) {
       // Перезапись файла
       let json = JSON.stringify(records, null, 2);
       fs.writeFile(config.srcDir + config.rootDir + config.json, json, (err) => {
-        if (err) res.send("Не удалось записать в JSON файл!");
+        if (err) res.send('Не удалось записать в JSON файл!');
         req.flash('notify', 'Запись "' + name + '" успешно удалена');
         res.redirect('/');
       });
     }
   });
-}
+};

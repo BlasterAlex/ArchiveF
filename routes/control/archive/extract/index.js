@@ -45,7 +45,7 @@ module.exports = function (req, res) {
       if (!fs.existsSync(imageDir))
         fs.mkdirSync(imageDir);
     } catch (e) {
-      error = "Невозможно создать папку изображений для '" + baseName + "', существует файл с таким именем!";
+      error = 'Невозможно создать папку изображений для \'' + baseName + '\', существует файл с таким именем!';
     }
 
     // Проверка аватарки базы
@@ -77,11 +77,11 @@ module.exports = function (req, res) {
       baseObj.json.size = 0;
       try {
         // Создать json файл
-        var records = []
+        var records = [];
         let jsonBlame = JSON.stringify(records, null, 2);
         fs.writeFileSync(jsonFile, jsonBlame);
       } catch (err) {
-        error = "Невозможно создать файл '" + config.json + "' для '" + baseName + "'";
+        error = 'Невозможно создать файл \'' + config.json + '\' для \'' + baseName + '\'';
       }
     }
 
@@ -100,7 +100,7 @@ module.exports = function (req, res) {
         let aboutBlame = JSON.stringify({ description: '' }, null, 2);
         fs.writeFileSync(aboutFile, aboutBlame);
       } catch (err) {
-        error = "Невозможно создать файл '" + config.about + "' для '" + baseName + "'";
+        error = 'Невозможно создать файл \'' + config.about + '\' для \'' + baseName + '\'';
       }
     }
 
@@ -121,7 +121,7 @@ module.exports = function (req, res) {
       lastUpdated.locale('ru');
       baseObj.lastUpdated = lastUpdated.fromNow();
     } catch (e) {
-      error = "Не существует папки изображений для '" + baseName + "'";
+      error = 'Не существует папки изображений для \'' + baseName + '\'';
     }
 
     baseObj.isArchive = false;
@@ -140,7 +140,7 @@ module.exports = function (req, res) {
   });
 
   // Ошибка архивации
-  myStream.on('error', function (err) {
+  myStream.on('error', function () {
     // При ошибке пароля все равно создается папка с базой
     rmdir(base, function (error) {
       if (error)
@@ -149,4 +149,4 @@ module.exports = function (req, res) {
         res.status(505).send('Неправильный пароль!');
     });
   });
-}
+};

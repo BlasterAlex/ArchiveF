@@ -1,9 +1,13 @@
 
-// Создание форм для ввода пароля
-function createPasswordForm(baseName) { // на создание архива
+// Создание форм для ввода пароля:
+// data = {
+//   baseName: <baseName>,
+//   repBase: <name of replacement base>
+// }
+function createPasswordForm(data) { // на создание архива
   $('article').append(
     '<div class="control-popup-background">' +
-    '  <div class="card mb-3 control-popup-password archieve-create">' +
+    '  <div class="card mb-3 control-popup-password archive-create">' +
     '    <img src="img/close-cross.svg" class="close-popup">' +
     '    <h3>Введите пароль для архива</h3>' +
     '    <div class="form-group">' +
@@ -18,12 +22,13 @@ function createPasswordForm(baseName) { // на создание архива
     '    <button class="btn btn-success submit-popup-without-password">Без пароля</button>' +
     '    <button class="btn btn-primary submit-popup-password" style="display: none">Отправить</button>' +
     '    </div>' +
-    '    <input name="control-popup-baseName" value="' + baseName + '" hidden' +
+    '    <input name="control-popup-baseName" value="' + data.baseName + '" hidden >' +
+    '    <input name="control-popup-repBase" value="' + data.repBase + '" hidden >' +
     '  </div>' +
     '</div>')
     .find('.control-popup-background')
     .fadeIn(300);
-};
+}
 function passwordEntryForm(baseName) { // на извлечение архива
   $('article').append(
     '<div class="control-popup-background">' +
@@ -42,18 +47,25 @@ function passwordEntryForm(baseName) { // на извлечение архива
     '</div>')
     .find('.control-popup-background')
     .fadeIn(300);
-};
+}
 
 // Создание формы для выбора новой активной базы
-function createActiveBaseSelForm(baseName) {
+function createActiveBaseSelForm(action, baseName) {
 
   // Получение вариантов выбора
   let bases = $('.control-card').filter(function () {
-    return $(this).find('.btn-warning').text() === 'Архивировать' && !$(this).find('.btn-success').prop("disabled");
+    return $(this).find('.btn-warning').text() === 'Архивировать' && !$(this).find('.btn-success').prop('disabled');
   });
 
   if (!bases.length) { // если нет неактивных баз
-    $('article').prepend('<div class="alert alert-danger"><div>Это единственная база, вы не можете ее удалить!</div></div>');
+    switch (action) {
+      case 'remove':
+        $('article').prepend('<div class="alert alert-danger"><div>Это единственная база, вы не можете ее удалить!</div></div>');
+        break;
+      case 'archive':
+        $('article').prepend('<div class="alert alert-danger"><div>Это единственная база, вы не можете ее архивировать!</div></div>');
+        break;
+    }
     clearFlash();
   } else {
 
@@ -121,10 +133,21 @@ function createActiveBaseSelForm(baseName) {
     background.find('.popup-select-base').click(function () {
       background.fadeOut(300, function () {
         $(this).remove();
-        removeBase({
-          baseName: baseName,
-          repBase: $(headers[select.val()]).text()
-        });
+
+        switch (action) {
+          case 'remove':
+            removeBase({
+              baseName: baseName,
+              repBase: $(headers[select.val()]).text()
+            });
+            break;
+          case 'archive':
+            createPasswordForm({
+              baseName: baseName,
+              repBase: $(headers[select.val()]).text()
+            });
+            break;
+        }
       });
     });
 
@@ -164,7 +187,7 @@ function createFormCreatingNewBase() {
     let data = {
       baseName: nameField.val(),
       description: background.find('.control-popup-create-description').val()
-    }
+    };
 
     // Получение списка существующих баз
     let headers = $('.control-card').filter(function () {
@@ -183,7 +206,7 @@ function createFormCreatingNewBase() {
         nameField.css('border-color', '#f5c8cd');
         setTimeout(function () {
           nameField.css('border-color', saved);
-        }, 5000)
+        }, 5000);
 
         check = false;
         return;
@@ -265,7 +288,7 @@ function changeOnArchiveCard(old, data) { // блок архива
       $(this).css('box-shadow', 'none');
     });
   });
-};
+}
 function changeOnBaseCard(old, data) { // блок базы
   let newCard = '<div class="card mb-3 control-card" style="display: none; max-width: 610px" name="' + data.baseName + '" >' +
     '  <div class="row no-gutters">' +
@@ -303,8 +326,8 @@ function changeOnBaseCard(old, data) { // блок базы
 
   // Настройка аватарки
   if (data.avatar === false) {
-    aCard.find('.control-card-base-avatar').attr('src', "img/default.jpg");
-    aCard.find('.control-card-icon').attr('src', "img/base-download.png");
+    aCard.find('.control-card-base-avatar').attr('src', 'img/default.jpg');
+    aCard.find('.control-card-icon').attr('src', 'img/base-download.png');
     aCard.find('.control-card-img p').text('Загрузить аватарку');
   }
 
@@ -318,14 +341,14 @@ function changeOnBaseCard(old, data) { // блок базы
     description.css('height', card['text-height']);
 
     if (description.height() < actualHeight)
-      description.after('<span class="card-description-readmore">(Читать далее)</span>')
+      description.after('<span class="card-description-readmore">(Читать далее)</span>');
 
     $(this).hide();
-  })
+  });
 
   // Отображение новой карты
   aCard.fadeIn(300);
-};
+}
 
 // ---------------База---------------
 
@@ -363,7 +386,7 @@ function removeBase(data) {
       newActive.addClass('active');
       changeBtnState({
         obj: newActive.find('.card-button-activate'),
-        isActive: false,
+        isActive: true,
         newText: 'Активна'
       });
     } else {
@@ -390,14 +413,15 @@ function removeBase(data) {
         break;
     }
   });
-};
+}
 
 // ---------------Архив---------------
 
 // Создание архива:
 // data = {
 //   action: 'create' | 'extract',
-//   baseName: <baseName>
+//   baseName: <baseName>,
+//   repBase: <name of replacement base>,
 //   password: <password>
 // }
 function archiveAction(data) {
@@ -410,23 +434,55 @@ function archiveAction(data) {
         method: 'POST',
         data: {
           baseName: data.baseName,
+          repBase: data.repBase,
           password: data.password
         }
       }).done(function (res) { // успех
         $('.control-popup-background').fadeOut(300, function () {
-          $(this).remove();
-          $('article').prepend('<div class="alert alert-success"><div>База ' + res.baseName + ' успешно архивирована</div></div>');
 
-          // Изменение карты на архивную
+          // Удаление окна с крутилкой
+          $(this).remove();
+
+          // Изменение текущей карты на активную
           changeOnArchiveCard($(document.getElementsByName(res.baseName)), res);
-          clearFlash();
+
+          if (res.newActive) { // если есть новая активная база
+
+            // Окно с сообщением
+            createFullPagePopup('База "' + res.baseName + '" успешно архивирована и заменена на "' + res.newActive + '". Перезапустите сервис для применения изменений.');
+
+            // Снятие акивации со всех баз
+            $('.control-card').each(function () {
+              if ($(this).hasClass('active')) {
+                $(this).removeClass('active');
+              }
+            });
+
+            // Активация выбранного окна
+            let newActive = $(document.getElementsByName(res.newActive));
+            newActive.addClass('active');
+            changeBtnState({
+              obj: newActive.find('.card-button-activate'),
+              isActive: true,
+              newText: 'Активна'
+            });
+          } else {
+            $('article').prepend('<div class="alert alert-success"><div>База ' + res.baseName + ' успешно архивирована</div></div>');
+            clearFlash();
+          }
         });
       }).fail(function (res) { // ошибка
         switch (res.status) {
           case 404: // не найдено
-            if (res.responseText === 'base not found') {
-              $('article').prepend('<div class="alert alert-danger"><div>База не найдена!</div></div>');
-              clearFlash();
+            switch (res.responseText) {
+              case 'base not found':
+                $('article').prepend('<div class="alert alert-danger"><div>База не найдена!</div></div>');
+                clearFlash();
+                break;
+              case 'repBase not found':
+                $('article').prepend('<div class="alert alert-danger"><div>База на замену активной не найдена!</div></div>');
+                clearFlash();
+                break;
             }
             break;
           case 505: // ошибка сервера
@@ -475,7 +531,7 @@ function archiveAction(data) {
       });
       break;
   }
-};
+}
 
 // Удаление архива:
 function removeArchive(archName) {
@@ -508,18 +564,35 @@ function removeArchive(archName) {
         break;
     }
   });
-};
+}
 
 // ---------------Кнопки---------------
 
 // Нажатие кнопки создания архива
 $(document).on('click', '.card-button-archive', function () {
-  createPasswordForm($(this).closest('.row').find('.card-title').text());
+
+  let card = $(this).closest('.control-card');
+  let baseName = card.find('.card-title').text();
+
+  if (confirm('Вы действительно хотите архивировать ' + baseName + '?') === true) {
+    // Проверка активности текущей базы
+    if (card.find('.card-buttons-block').find('.btn-success').prop('disabled')) { // база активна
+      createActiveBaseSelForm('archive', baseName);
+    } else { // база не активна
+      createPasswordForm({
+        baseName: baseName,
+        repBase: false
+      });
+    }
+  }
 });
 
 // Нажатие кнопки распаковки архива
 $(document).on('click', '.card-button-archive-extract', function () {
-  passwordEntryForm($(this).closest('.row').find('.card-title').text());
+  let archName = $(this).closest('.row').find('.card-title').text();
+  if (confirm('Вы действительно хотите распаковать ' + archName + '?') === true) {
+    passwordEntryForm(archName);
+  }
 });
 
 // Событие ввода пароля
@@ -533,10 +606,10 @@ $(document).on('keyup', '.control-popup-password-input', function () {
 
     // Проверка всех полей на наличие значения
     if ($(inputs[0]).val().length && $(inputs[1]).val().length) {
-      if (!btn.is(":visible"))
+      if (!btn.is(':visible'))
         btn.fadeIn(150);
     } else {
-      if (btn.is(":visible"))
+      if (btn.is(':visible'))
         btn.fadeOut(150);
     }
   }
@@ -546,7 +619,7 @@ $(document).on('keyup', '.control-popup-password-input', function () {
 $(document).on('click', '.show-password', function () {
   let input = $(this).closest('.form-group').find('.control-popup-password-input');
 
-  if (input.attr('type') === 'password') {
+  if (input.attr('type') === 'password' && input.val().length) {
     input.attr('type', 'text');
     $(this).text('hide');
   } else {
@@ -585,7 +658,7 @@ $(document).on('click', '.submit-popup-password', function () { // пароль 
       // Обнуление состояний показа текста на полях
       parent.find('.show-password').each(function () {
         $(this).text('show');
-      })
+      });
 
       // Скрыть кнопку отправки пароля
       parent.find('.submit-popup-password').fadeOut(150);
@@ -598,15 +671,16 @@ $(document).on('click', '.submit-popup-password', function () { // пароль 
     data = {
       action: 'create',
       baseName: document.getElementsByName('control-popup-baseName')[0].value,
+      repBase: document.getElementsByName('control-popup-repBase')[0].value,
       password: $(fields[0]).val()
-    }
+    };
 
   } else {
     data = {
       action: 'extract',
       baseName: document.getElementsByName('control-popup-baseName')[0].value,
       password: $(fields[0]).val()
-    }
+    };
   }
 
   $(this).closest('.control-popup-password').fadeOut(300, function () {
@@ -629,9 +703,11 @@ $(document).on('click', '.submit-popup-password', function () { // пароль 
 });
 $(document).on('click', '.submit-popup-without-password', function () { // пароль пустой
   $(this).closest('.control-popup-password').fadeOut(300, function () {
+
     let data = {
       action: 'create',
       baseName: document.getElementsByName('control-popup-baseName')[0].value,
+      repBase: document.getElementsByName('control-popup-repBase')[0].value,
       password: ''
     };
 
@@ -652,7 +728,7 @@ $(document).on('click', '.submit-popup-without-password', function () { // па�
   });
 });
 
-// Кнопка удаление на карте
+// Кнопка удаления на карте
 $(document).on('click', '.card-button-remove', function () {
 
   let cardButtons = $(this).closest('.card-buttons-block');
@@ -660,11 +736,11 @@ $(document).on('click', '.card-button-remove', function () {
   // Сбор данных для отправки
   let data = { baseName: $(this).closest('.row').find('.card-title').text() };
 
-  if (confirm("Вы действительно хотите удалить " + data.baseName + "?") === true) {
+  if (confirm('Вы действительно хотите удалить ' + data.baseName + '?') === true) {
 
     // Проверка активности текущей базы
-    if (cardButtons.find('.btn-success').prop("disabled")) { // база активна
-      createActiveBaseSelForm(data.baseName);
+    if (cardButtons.find('.btn-success').prop('disabled')) { // база активна
+      createActiveBaseSelForm('remove', data.baseName);
     } else { // база не активна или это архив
       // Выбор действия
       if (cardButtons.find('.btn-warning').text() === 'Архивировать') { // это база

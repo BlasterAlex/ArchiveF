@@ -3,7 +3,7 @@ var config = JSON.parse(fs.readFileSync('config/config.json'));
 
 module.exports = function (req, res) {
 
-  fs.readFile(config.srcDir + config.rootDir + config.json, (err, data) => {
+  fs.readFile(config.srcDir + config.rootDir + config.json, (err) => {
     if (err) {
       fs.mkdir(config.srcDir + config.rootDir, (err) => { // создание папки
         if (err)
@@ -11,11 +11,11 @@ module.exports = function (req, res) {
 
         fs.mkdirSync(config.srcDir + config.rootDir + config.imageDir); // создание папки для фото
 
-        var records = [] // создание пустого JSON файла
+        var records = []; // создание пустого JSON файла
         let json = JSON.stringify(records, null, 2);
 
         fs.writeFile(config.srcDir + config.rootDir + config.json, json, (err) => {
-          if (err) res.send("Не удалось записать в JSON файл!");
+          if (err) res.send('Не удалось записать в JSON файл!');
           res.redirect('/');
         });
 
@@ -23,4 +23,4 @@ module.exports = function (req, res) {
     }
     else res.render('somethingWrong', { textError: 'Папка уже была создана!' });
   });
-}
+};

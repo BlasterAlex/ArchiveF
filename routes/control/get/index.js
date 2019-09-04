@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
 
-var config = JSON.parse(fs.readFileSync('config/config.json'))
+var config = JSON.parse(fs.readFileSync('config/config.json'));
 
 module.exports = function (req, res) {
 
@@ -26,7 +26,7 @@ module.exports = function (req, res) {
         if (!fs.existsSync(imageDir))
           fs.mkdirSync(imageDir);
       } catch (e) {
-        error = "Невозможно создать папку изображений для '" + base.name + "', существует файл с таким именем!";
+        error = 'Невозможно создать папку изображений для \'' + base.name + '\', существует файл с таким именем!';
       }
 
       // Проверка аватарки базы
@@ -58,11 +58,11 @@ module.exports = function (req, res) {
         base.json.size = 0;
         try {
           // Создать json файл
-          var records = []
+          var records = [];
           let jsonBlame = JSON.stringify(records, null, 2);
           fs.writeFileSync(jsonFile, jsonBlame);
         } catch (err) {
-          error = "Невозможно создать файл '" + config.json + "' для '" + base.name + "'";
+          error = 'Невозможно создать файл \'' + config.json + '\' для \'' + base.name + '\'';
         }
       }
 
@@ -81,7 +81,7 @@ module.exports = function (req, res) {
           let aboutBlame = JSON.stringify({ description: '' }, null, 2);
           fs.writeFileSync(aboutFile, aboutBlame);
         } catch (err) {
-          error = "Невозможно создать файл '" + config.about + "' для '" + base.name + "'";
+          error = 'Невозможно создать файл \'' + config.about + '\' для \'' + base.name + '\'';
         }
       }
 
@@ -95,7 +95,7 @@ module.exports = function (req, res) {
       try {
         let imageDirLast = moment(fs.statSync(imageDir).mtime);
         let rootDirLast = moment(fs.statSync(file).mtime);
-        var lastUpdated;
+        let lastUpdated;
 
         if (imageDirLast.isAfter(rootDirLast))
           lastUpdated = imageDirLast;
@@ -105,7 +105,7 @@ module.exports = function (req, res) {
         lastUpdated.locale('ru');
         base.lastUpdated = lastUpdated.fromNow();
       } catch (e) {
-        error = "Не существует папки изображений для '" + base.name + "'";
+        error = 'Не существует папки изображений для \'' + base.name + '\'';
       }
 
       base.isArchive = false;
@@ -122,7 +122,7 @@ module.exports = function (req, res) {
       if (!(fs.existsSync(baseDir) && fs.statSync(baseDir).isDirectory())) {
 
         // Время последнего обращения к архиву
-        var lastUpdated = moment(fs.statSync(file).mtime);
+        let lastUpdated = moment(fs.statSync(file).mtime);
         lastUpdated.locale('ru');
 
         bases.push({
@@ -144,4 +144,4 @@ module.exports = function (req, res) {
     res.redirect('/');
   } else
     res.render('controlPage', { bases: bases });
-}
+};

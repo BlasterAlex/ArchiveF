@@ -1,6 +1,6 @@
 $(window).on('load', function () {
-    var $preloader = $('#page-preloader'),
+  var $preloader = $('#page-preloader'),
     $spinner = $preloader.find('.spinner');
-    $spinner.fadeOut();
-    $preloader.delay(150).fadeOut('slow');  
+  $spinner.fadeOut();
+  $preloader.delay(150).fadeOut('slow');  
 });

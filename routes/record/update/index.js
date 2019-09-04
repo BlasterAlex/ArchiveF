@@ -8,7 +8,7 @@ var getIndex = function (arr, id) {
     if (arr[i].id === id)
       return i;
 
-  console.log("Не нашел!");
+  console.log('Не нашел!');
   return -1;
 };
 
@@ -59,7 +59,7 @@ module.exports = function (req, res) {
                 link_names.splice(i, 1);
               } else { // добавление названия для непустой ссылки
                 links[i] = {
-                  name: "",
+                  name: '',
                   url: links[i]
                 };
                 if (link_names[i] != 'null')
@@ -81,7 +81,7 @@ module.exports = function (req, res) {
           records[index].changedInt = dateFormat.stringToDate(records[index].created).getTime();
 
           // Сортировка
-          function sortResults(prop, asc) {
+          function sortResults(prop, asc) { // eslint-disable-line
             records = records.sort(function (a, b) {
               if (asc) {
                 return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
@@ -95,7 +95,7 @@ module.exports = function (req, res) {
           // Перезапись файла
           let json = JSON.stringify(records, null, 2);
           fs.writeFile(config.srcDir + config.rootDir + config.json, json, (err) => {
-            if (err) res.send("Не удалось записать в JSON файл!");
+            if (err) res.send('Не удалось записать в JSON файл!');
             req.flash('notify', 'Запись "' + req.body.name + '" успешно обновлена');
             res.redirect('/record/' + req.body.id);
           });
@@ -103,4 +103,4 @@ module.exports = function (req, res) {
       }
     }
   });
-}
+};

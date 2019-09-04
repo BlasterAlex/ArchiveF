@@ -1,10 +1,10 @@
 // Замена сломанной картинки на дефолтную
-function imgError(img) {
+function imgError(img) { // eslint-disable-line
   img.src = '/img/default.jpg';
 }
 
 // Отображение изображения после загрузки
-function imgLoad(img) {
+function imgLoad(img) { // eslint-disable-line
   $(img).parent().fadeIn(400);
 }
 
@@ -34,11 +34,11 @@ class Images {
     } else
       return true;
   }
-};
+}
 var images;
 
 // Загрузка страницы
-$(document).ready(function () { images = new Images });
+$(document).ready(function () { images = new Images; });
 
 // Удаление изображения
 $(document).on('click', '.recordRedCross', function () {
@@ -46,7 +46,7 @@ $(document).on('click', '.recordRedCross', function () {
   let photo = delBtn.siblings('.smallPic').attr('name');
   let id = $('.record-page').attr('id');
 
-  let quest = confirm("Будет удалено фото: " + photo + "\nИз записи: " + id + "\n\nВы уверены?");
+  let quest = confirm('Будет удалено фото: ' + photo + '\nИз записи: ' + id + '\n\nВы уверены?');
 
   if (quest === true) { // удаление изображения
 
@@ -87,7 +87,7 @@ $(document).on('click', '.recordRedCross', function () {
               $('.add_picture_link')
                 .css({ 'opacity': 0 })
                 .animate({ 'opacity': 1 }, 300);
-            })
+            });
         }
 
         images = new Images; // сохранение нового состояния изображений

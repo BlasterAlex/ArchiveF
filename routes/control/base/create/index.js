@@ -21,7 +21,7 @@ module.exports = function (req, res) {
   try {
     fs.mkdirSync(base);
   } catch (e) {
-    error = "Невозможно создать папку '" + baseName + "'";
+    error = 'Невозможно создать папку \'' + baseName + '\'';
   }
 
   if (error)
@@ -32,17 +32,17 @@ module.exports = function (req, res) {
   try {
     fs.mkdirSync(imageDir);
   } catch (e) {
-    error = "Невозможно создать папку изображений для '" + baseName + "'";
+    error = 'Невозможно создать папку изображений для \'' + baseName + '\'';
   }
 
   // Создание json файла
   let jsonFile = path.join(base, config.json);
   try {
-    var records = []
+    var records = [];
     let jsonBlame = JSON.stringify(records, null, 2);
     fs.writeFileSync(jsonFile, jsonBlame);
   } catch (err) {
-    error = "Невозможно создать файл '" + config.json + "' для '" + baseName + "'";
+    error = 'Невозможно создать файл \'' + config.json + '\' для \'' + baseName + '\'';
   }
 
   // Создание информационного файла
@@ -52,7 +52,7 @@ module.exports = function (req, res) {
     let aboutBlame = JSON.stringify(about, null, 2);
     fs.writeFileSync(aboutFile, aboutBlame);
   } catch (err) {
-    error = "Невозможно создать файл '" + config.about + "' для '" + baseName + "'";
+    error = 'Невозможно создать файл \'' + config.about + '\' для \'' + baseName + '\'';
   }
 
   if (error)
@@ -73,4 +73,4 @@ module.exports = function (req, res) {
     isActive: false,
     isArchive: false,
   });
-}
+};

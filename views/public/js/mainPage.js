@@ -7,9 +7,9 @@ function getCellValue(row, index) {
 // Сравнение двух строк таблицы
 function comparer(index) {
   return function (a, b) {
-    var valA = getCellValue(a, index), valB = getCellValue(b, index)
-    return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
-  }
+    var valA = getCellValue(a, index), valB = getCellValue(b, index);
+    return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB);
+  };
 }
 // Разделение контента на страницы
 class Pagination {
@@ -117,7 +117,7 @@ class Pagination {
     if (target.find(this.switch).length === 0)
       target.append(this.switch);
   }
-};
+}
 
 // Главная функция
 $(document).ready(function () {
@@ -133,7 +133,7 @@ $(document).ready(function () {
     var pagination = new Pagination(rows);
 
     // Поиск
-    $("#search")
+    $('#search')
       .keyup(function () {
         let filter = $(this).val().toUpperCase(); // ключ для поиска
         let col = 0; // количество результатов поиска
@@ -192,13 +192,13 @@ $(document).ready(function () {
 
       // Сортировка
       rows = rows.sort(comparer($(this).index() - 1));
-      if (asc) { rows = rows.reverse() }
+      if (asc) { rows = rows.reverse(); }
 
       // Вернуть страницы
       pagination.paginate();
 
       // Вывод в таблицу
-      for (var i = 0; i < rows.length; i++) { table.append(rows[i]) }
+      for (var i = 0; i < rows.length; i++) { table.append(rows[i]); }
     });
     // Вызов сортировки по имени
     sortable.first().trigger('click');
@@ -223,4 +223,4 @@ $(document).ready(function () {
       }, 1000);
     });
   }
-})
+});

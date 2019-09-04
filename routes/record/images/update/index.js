@@ -8,7 +8,7 @@ var getIndex = function (arr, id) {
     if (arr[i].id === id)
       return i;
 
-  console.log("Не нашел!");
+  console.log('Не нашел!');
   return -1;
 };
 
@@ -52,4 +52,4 @@ module.exports = function (req, res) {
       }
     }
   });
-}
+};

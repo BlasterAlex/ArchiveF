@@ -9,7 +9,7 @@ module.exports = function (req, res) {
   // Проверка на наличие папки
   var errImgFile = false;
   fs.readFile(config.srcDir + config.rootDir + config.imageDir, (err) => {
-    if (err.syscall != "read") {
+    if (err.syscall != 'read') {
       errImgFile = true;
     }
   });
@@ -25,6 +25,6 @@ module.exports = function (req, res) {
         messages: req.flash('notify')
       });
     } else
-      res.render('somethingWrong', { textError: "Не найдена папка изображений" });
+      res.render('somethingWrong', { textError: 'Не найдена папка изображений' });
   });
-}
+};

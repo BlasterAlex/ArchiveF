@@ -9,5 +9,5 @@ module.exports = function (req, res) {
       var records = JSON.parse(data);
       res.render('delete', { records: records, errors: req.flash('error') });
     }
-  })
-}
+  });
+};

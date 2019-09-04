@@ -41,4 +41,4 @@ module.exports = function (req, res) {
     avatar: path.join(baseName, fileName)
   });
 
-}
+};

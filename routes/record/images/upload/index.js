@@ -8,7 +8,7 @@ var getIndex = function (arr, id) {
     if (arr[i].id === id)
       return i;
 
-  console.log("Не нашел!");
+  console.log('Не нашел!');
   return -1;
 };
 
@@ -35,7 +35,7 @@ var getName = function (record, extension) {
     }
   }
   return name + '.' + extension;
-}
+};
 
 module.exports = function (req, res) {
 
@@ -69,7 +69,7 @@ module.exports = function (req, res) {
             sampleFile.mv(config.srcDir + config.rootDir + config.imageDir + imageName, function (err) {
               if (err)
                 return res.status(500).send(err);
-            })
+            });
           }
         } else { // если несколько
           if (oldLength + length + 1 > 4) {
@@ -86,7 +86,7 @@ module.exports = function (req, res) {
               sampleFile.mv(config.srcDir + config.rootDir + config.imageDir + imageName, function (err) {
                 if (err)
                   return res.status(500).send(err);
-              })
+              });
             }
           }
         }
@@ -114,4 +114,4 @@ module.exports = function (req, res) {
       }
     }
   });
-}
+};

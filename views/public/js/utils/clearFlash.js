@@ -7,6 +7,6 @@ function clearFlash() {
         $(this).remove();
       });
     });
-  }, 5000)
-};
+  }, 5000);
+}
 clearFlash();

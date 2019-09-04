@@ -1,7 +1,7 @@
 // Поддерживать квадратную форму
 function beSquare() {
   $('.add_picture_link').height($('.add_picture_link').width());
-};
+}
 
 // Добавление изображений на страницу
 function addImages(images) {
@@ -81,17 +81,17 @@ function submit() {
     }
   });
 
-  $("#file-input").val(''); // очистка file upload field
+  $('#file-input').val(''); // очистка file upload field
 }
 
 $(document).ready(function () {
   beSquare(); // Обновлять при ресайзе
-  $(window).resize(function () { beSquare() });
+  $(window).resize(function () { beSquare(); });
 });
 
 // Нажатие на форму
 $(document).on('click', '.add_picture_link', function () {
-  document.getElementById("file-input").click();
+  document.getElementById('file-input').click();
 });
 
 // Фокусировка на форме
@@ -127,4 +127,4 @@ $(document).on('drop', '.add_picture_link', function (e) {
   submit();
 });
 
-$(document).on('change', '#file-input', function () { submit() });
+$(document).on('change', '#file-input', function () { submit(); });

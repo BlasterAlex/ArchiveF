@@ -7,12 +7,22 @@ var config = JSON.parse(fs.readFileSync('config/config.json'));
 
 module.exports = function (req, res) {
   let baseName = req.body.baseName;
+  let repBaseName = req.body.repBase;
   let password = req.body.password;
-  let base = path.join(config.srcDir, baseName);
+  let src = config.srcDir;
+  let base = path.join(src, baseName);
 
   // Проверка папки базы
   if (!(fs.existsSync(base) && fs.statSync(base).isDirectory()))
     return res.status(404).send('base not found');
+
+  // Проверка папки базы на замену, если такая есть
+  if (repBaseName != 'false') {
+    let repBase = path.join(src, repBaseName);
+    if (!(fs.existsSync(repBase) && fs.statSync(repBase).isDirectory())) {
+      return res.status(404).send('repBase not found');
+    }
+  }
 
   // Формирование объекта
   let data = {
@@ -32,19 +42,32 @@ module.exports = function (req, res) {
       if (err)
         res.status(505).send(err);
       else {
+
+        // Формирование объекта для отправки на фронт
+        var data = { baseName: baseName };
+
+        if (repBaseName != 'false') { // если есть файл на замену
+          // Запись названия новой базы в конфиг
+          config.rootDir = repBaseName + '/';
+          fs.writeFileSync('config/config.json', JSON.stringify(config, null, 2));
+
+          data.newActive = repBaseName;
+        } else {
+          data.newActive = false;
+        }
+
+        // Дата последней модификации
         var lastUpdated = moment(fs.statSync(archive).mtime);
         lastUpdated.locale('ru');
+        data.lastUpdated = lastUpdated.fromNow();
 
-        res.status(200).send({
-          baseName: baseName,
-          lastUpdated: lastUpdated.fromNow()
-        });
+        res.status(200).send(data);
       }
     });
-  })
+  });
 
   // Ошибка архивации
   myStream.on('error', function (err) {
     return res.status(505).send(err);
   });
-}
+};

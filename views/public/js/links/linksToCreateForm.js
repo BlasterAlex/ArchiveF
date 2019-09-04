@@ -8,7 +8,7 @@ function addValidate() {
 }
 
 // Проверка всех полей на валидность
-function checkValidate() {
+function checkValidate() { // eslint-disable-line
   let check = true;
   $('.url-input').each(function (i, el) {
     if ($(el).hasClass('is-invalid')) check = false;
@@ -68,7 +68,7 @@ $(document).ready(function () {
   });
 
   $('.input-group-button').click(function () { /* кнопка удаления ссылки */
-    $(this).parents('.input-group').children('.form-control').val("");
+    $(this).parents('.input-group').children('.form-control').val('');
 
     hiddenClasses.push($(this).parents('.input-group').children('.form-control').first().attr('class'));
     $(this).parents('.input-group').slideUp(300, function () {
@@ -83,11 +83,11 @@ $(document).ready(function () {
 
     $(document.getElementsByName('linkName')).each(function (index, item) {
       if (!$(item).val())
-        $(item).val("null");
+        $(item).val('null');
     });
     $(document.getElementsByName('url')).each(function (index, item) {
       if (!$(item).val())
-        $(item).val("null");
+        $(item).val('null');
     });
   });
 });
@@ -110,7 +110,7 @@ $(document).on('click', '.fa-chevron-down', function () { /* кнопка Вни
 
 $(document).on('click', '.remove-link', function () { /* крестик на поле ссылки */
   // Очистить поля
-  $(this).parents('.input-group').children('.form-control').val("");
+  $(this).parents('.input-group').children('.form-control').val('');
 
   // Скрыть элемент
   $(this).parents('.input-group').slideUp(300, function () {

@@ -1,0 +1,28 @@
+module.exports = {
+  'env': {
+    'browser': true,
+    'commonjs': true,
+    'es6': true
+  },
+  'extends': 'eslint:recommended',
+  'globals': {
+    'Atomics': 'readonly',
+    'SharedArrayBuffer': 'readonly'
+  },
+  'parserOptions': {
+    'ecmaVersion': 2018
+  },
+  'rules': {
+    'no-useless-escape': 'off',
+    'no-undef': 'off',
+    'no-unused-vars': 'warn',
+    'no-inner-declarations': 'warn',
+    'indent': ['warn', 2, {
+      "SwitchCase": 1,
+      "outerIIFEBody": 0
+    }],
+    'linebreak-style': ['warn', 'unix'],
+    'quotes': ['warn', 'single'],
+    'semi': ['warn', 'always']
+  }
+};

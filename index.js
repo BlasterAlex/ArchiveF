@@ -47,9 +47,9 @@ app.use(function (req, res) {
 require('reloader')({
   watchModules: true,
   onStart: function () {
-    console.log('Listening on port ', 3000);
+    console.log('Listening on port ', config.port);
   },
   onReload: function () {
-    app.listen(3000);
+    app.listen(config.port);
   }
 });
