@@ -15,6 +15,7 @@ module.exports = {
   'rules': {
     'no-useless-escape': 'off',
     'no-undef': 'off',
+    'no-extra-semi': 'warn',
     'no-unused-vars': 'warn',
     'no-inner-declarations': 'warn',
     'indent': ['warn', 2, {

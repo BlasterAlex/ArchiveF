@@ -25,9 +25,27 @@ function createPasswordForm(data) { // на создание архива
     '    <input name="control-popup-baseName" value="' + data.baseName + '" hidden >' +
     '    <input name="control-popup-repBase" value="' + data.repBase + '" hidden >' +
     '  </div>' +
-    '</div>')
-    .find('.control-popup-background')
-    .fadeIn(300);
+    '</div>');
+
+  // Отображение окна
+  let background = $('article').find('.control-popup-background');
+  background
+    .fadeIn(300)
+    .find('.control-popup-password-input')[0]
+    .focus();
+
+  // Обработка нажатия Enter
+  let inputsQty = background.find('.control-popup-password-input').length;
+  background.find('.control-popup-password-input').on('keyup', function (e) {
+    if (e.keyCode === 13) {
+      let index = $(this).index('.control-popup-password-input');
+
+      if (index < (inputsQty - 1)) // смещение фокуса на след input 
+        background.find('.control-popup-password-input')[index + 1].focus();
+      else // фокус на последней видимой кнопке
+        background.find('.btn').filter(':visible').last().focus();
+    }
+  });
 }
 function passwordEntryForm(baseName) { // на извлечение архива
   $('article').append(
@@ -44,9 +62,21 @@ function passwordEntryForm(baseName) { // на извлечение архива
     '    </div>' +
     '    <input name="control-popup-baseName" value="' + baseName + '" hidden' +
     '  </div>' +
-    '</div>')
-    .find('.control-popup-background')
-    .fadeIn(300);
+    '</div>');
+
+  // Отображение окна
+  let background = $('article').find('.control-popup-background');
+  background
+    .fadeIn(300)
+    .find('.control-popup-password-input')
+    .focus();
+
+  // Обработка нажатия Enter
+  background.find('.control-popup-password-input').on('keyup', function (e) {
+    if (e.keyCode === 13) {
+      background.find('.submit-popup-password').click();
+    }
+  });
 }
 
 // Создание формы для выбора новой активной базы
@@ -152,7 +182,10 @@ function createActiveBaseSelForm(action, baseName) {
     });
 
     // Отображение окна выбора
-    background.fadeIn(300);
+    background
+      .fadeIn(300)
+      .find('#baseSelect')
+      .focus();
   }
 }
 
@@ -175,9 +208,27 @@ function createFormCreatingNewBase() {
     '    <button class="btn btn-primary submit-popup-create">Отправить</button>' +
     '    </div>' +
     '  </div>' +
-    '</div>')
-    .find('.control-popup-background')
-    .fadeIn(300);
+    '</div>');
+
+  // Отображение окна
+  let background = $('article').find('.control-popup-background');
+  background
+    .fadeIn(300)
+    .find('.control-popup-create-name')
+    .focus();
+
+  // Обработка нажатия Enter
+  let fieldsQty = background.find('.form-control').length;
+  background.find('.form-control').on('keypress', function (e) {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      let index = $(this).index('.control-popup-background .form-control');
+      if (index < (fieldsQty - 1))
+        $('.control-popup-background .form-control')[index + 1].focus();
+      else
+        background.find('.submit-popup-create').focus();
+    }
+  });
 
   // Отправить данные о новой базе
   $(document).on('click', '.submit-popup-create', function () {
@@ -477,16 +528,25 @@ function archiveAction(data) {
             switch (res.responseText) {
               case 'base not found':
                 $('article').prepend('<div class="alert alert-danger"><div>База не найдена!</div></div>');
+                $('.control-popup-background').fadeOut(300, function () {
+                  $(this).remove();
+                });
                 clearFlash();
                 break;
               case 'repBase not found':
                 $('article').prepend('<div class="alert alert-danger"><div>База на замену активной не найдена!</div></div>');
+                $('.control-popup-background').fadeOut(300, function () {
+                  $(this).remove();
+                });
                 clearFlash();
                 break;
             }
             break;
           case 505: // ошибка сервера
             $('article').prepend('<div class="alert alert-danger"><div>' + res.responseText + '</div></div>');
+            $('.control-popup-background').fadeOut(300, function () {
+              $(this).remove();
+            });
             clearFlash();
             break;
         }
@@ -514,17 +574,26 @@ function archiveAction(data) {
           case 403: // запрещено
             if (res.responseText === 'base is exist') {
               $('article').prepend('<div class="alert alert-danger"><div>Такая база уже разархивирована!</div></div>');
+              $('.control-popup-background').fadeOut(300, function () {
+                $(this).remove();
+              });
               clearFlash();
             }
             break;
           case 404: // не найдено
             if (res.responseText === 'archive not found') {
               $('article').prepend('<div class="alert alert-danger"><div>Архив не найден!</div></div>');
+              $('.control-popup-background').fadeOut(300, function () {
+                $(this).remove();
+              });
               clearFlash();
             }
             break;
           case 505: // ошибка сервера
             $('article').prepend('<div class="alert alert-danger"><div>' + res.responseText + '</div></div>');
+            $('.control-popup-background').fadeOut(300, function () {
+              $(this).remove();
+            });
             clearFlash();
             break;
         }
@@ -555,11 +624,17 @@ function removeArchive(archName) {
       case 404: // не найдено
         if (res.responseText === 'arch not found') {
           $('article').prepend('<div class="alert alert-danger"><div>Архив не найден!</div></div>');
+          $('.control-popup-background').fadeOut(300, function () {
+            $(this).remove();
+          });
           clearFlash();
         }
         break;
       case 505: // ошибка сервера
         $('article').prepend('<div class="alert alert-danger"><div>' + res.responseText + '</div></div>');
+        $('.control-popup-background').fadeOut(300, function () {
+          $(this).remove();
+        });
         clearFlash();
         break;
     }
