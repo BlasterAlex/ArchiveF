@@ -8,14 +8,14 @@ var getIndex = function (arr, id) {
     if (arr[i].id === id)
       return i;
 
-  console.log('Не нашел!');
+  console.log('Не нашел! ');
   return -1;
 };
 
 module.exports = function (req, res) {
 
   fs.readFile(config.srcDir + config.rootDir + config.json, (err, data) => {
-    if (err) res.render('somethingWrong', { textError: require('../../../utils/errorOutput')() });
+    if (err) res.status(404).render('somethingWrong', { textError: require('../../../utils/errorOutput')() });
     else {
       var records = JSON.parse(data);
       var index = getIndex(records, req.body.id);
@@ -34,7 +34,7 @@ module.exports = function (req, res) {
         if (check != undefined && check != records[index]) {
           req.flash('error', 'Запись "' + records[index].name + '" уже есть');
           res.redirect('/record/' + req.body.id);
-        } else { // если это новое имя
+        } else {
 
           // Массивы ссылок
           var links = req.body.url;
@@ -81,23 +81,14 @@ module.exports = function (req, res) {
           records[index].changedInt = dateFormat.stringToDate(records[index].created).getTime();
 
           // Сортировка
-          function sortResults(prop, asc) { // eslint-disable-line
-            records = records.sort(function (a, b) {
-              if (asc) {
-                return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
-              } else {
-                return (b[prop] > a[prop]) ? 1 : ((b[prop] < a[prop]) ? -1 : 0);
-              }
-            });
-          }
-          sortResults('name', true);
+          records = require('../../../utils/sortRecords')(records, { 'prop': 'name', 'asc': true });
 
           // Перезапись файла
           let json = JSON.stringify(records, null, 2);
           fs.writeFile(config.srcDir + config.rootDir + config.json, json, (err) => {
             if (err) res.send('Не удалось записать в JSON файл!');
             req.flash('notify', 'Запись "' + req.body.name + '" успешно обновлена');
-            res.redirect('/record/' + req.body.id);
+            res.redirect(303, '/record/' + req.body.id);
           });
         }
       }

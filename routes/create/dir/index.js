@@ -7,7 +7,7 @@ module.exports = function (req, res) {
     if (err) {
       fs.mkdir(config.srcDir + config.rootDir, (err) => { // создание папки
         if (err)
-          return res.render('somethingWrong', { textError: 'Не удалось создать папку!' });
+          return res.status(404).render('somethingWrong', { textError: 'Не удалось создать папку!' });
 
         fs.mkdirSync(config.srcDir + config.rootDir + config.imageDir); // создание папки для фото
 
@@ -21,6 +21,6 @@ module.exports = function (req, res) {
 
       });
     }
-    else res.render('somethingWrong', { textError: 'Папка уже была создана!' });
+    else res.status(404).render('somethingWrong', { textError: 'Папка уже была создана!' });
   });
 };

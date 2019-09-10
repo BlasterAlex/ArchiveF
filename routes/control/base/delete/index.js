@@ -20,6 +20,7 @@ module.exports = function (req, res) {
   if (repBaseName != 'false') {
     let repBase = path.join(src, repBaseName);
     if (!(fs.existsSync(repBase) && fs.statSync(repBase).isDirectory())) {
+      console.log(repBase);
       return res.status(404).send('repBase not found');
     }
   }

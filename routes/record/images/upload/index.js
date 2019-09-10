@@ -60,9 +60,9 @@ module.exports = function (req, res) {
           if (oldLength + 2 > 4) {
             return res.status(400).send('too many images');
           } else {
-            sampleFile = req.files.array;
-            extension = sampleFile.name.split(/\.(?=[^\.]+$)/)[1];
-            imageName = getName(records[index], extension);
+            let sampleFile = req.files.array;
+            let extension = sampleFile.name.split(/\.(?=[^\.]+$)/)[1];
+            let imageName = getName(records[index], extension);
             records[index].addImages.push(imageName);
             newImages.push(imageName);
 
@@ -78,8 +78,8 @@ module.exports = function (req, res) {
           else {
             for (var i = 0; i < length; i++) {
               let sampleFile = req.files.array[i];
-              extension = sampleFile.name.split(/\.(?=[^\.]+$)/)[1];
-              imageName = getName(records[index], extension);
+              let extension = sampleFile.name.split(/\.(?=[^\.]+$)/)[1];
+              let imageName = getName(records[index], extension);
               records[index].addImages.push(imageName);
               newImages.push(imageName);
 

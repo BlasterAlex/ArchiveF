@@ -12,11 +12,11 @@ module.exports = function (req, res) {
       errImgFile = true;
     }
   });
-  if (errImgFile) return res.render('somethingWrong', { textError: 'Не найдена папка изображений' });
+  if (errImgFile) return res.status(404).render('somethingWrong', { textError: 'Не найдена папка изображений' });
 
   // Добавление новой записи
   fs.readFile(config.srcDir + config.rootDir + config.json, (err, data) => {
-    if (err) res.render('somethingWrong', { textError: require('../../../utils/errorOutput')() });
+    if (err) res.status(404).render('somethingWrong', { textError: require('../../../utils/errorOutput')() });
     else {
       var records = JSON.parse(data);
       var id = uniqid(), extension, imageName;
@@ -130,23 +130,14 @@ module.exports = function (req, res) {
           records.push(newItem);
 
           // Сортировка
-          function sortResults(prop, asc) { // eslint-disable-line
-            records = records.sort(function (a, b) {
-              if (asc) {
-                return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
-              } else {
-                return (b[prop] > a[prop]) ? 1 : ((b[prop] < a[prop]) ? -1 : 0);
-              }
-            });
-          }
-          sortResults('name', true);
+          records = require('../../../utils/sortRecords')(records, { 'prop': 'name', 'asc': true });
 
           // Перезапись файла
           let json = JSON.stringify(records, null, 2);
           fs.writeFile(config.srcDir + config.rootDir + config.json, json, (err) => {
             if (err) res.send('Не удалось записать в JSON файл!');
             req.flash('notify', 'Запись "' + newItem.name + '" успешно добавлена');
-            res.redirect('/');
+            res.redirect(303, '/');
           });
         }
       }

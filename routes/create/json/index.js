@@ -13,6 +13,6 @@ module.exports = function (req, res) {
         res.redirect('/');
       });
     }
-    else res.render('somethingWrong', { textError: 'Файл уже был создан!' });
+    else res.status(404).render('somethingWrong', { textError: 'Файл уже был создан!' });
   });
 };

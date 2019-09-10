@@ -36,34 +36,37 @@ module.exports = function (req, res) {
   var archive = path.join(config.srcDir, baseName + '.7z');
   const myStream = Seven.add(archive, base, data);
 
+
   // Архивация завершена
   myStream.on('end', function () {
-    rmdir(base, function (err) {
-      if (err)
-        res.status(505).send(err);
-      else {
+    if (myStream.info.get('Archives with Errors') === undefined) {
+      rmdir(base, function (err) {
+        if (err)
+          res.status(505).send(err);
+        else {
 
-        // Формирование объекта для отправки на фронт
-        var data = { baseName: baseName };
+          // Формирование объекта для отправки на фронт
+          var data = { baseName: baseName };
 
-        if (repBaseName != 'false') { // если есть файл на замену
-          // Запись названия новой базы в конфиг
-          config.rootDir = repBaseName + '/';
-          fs.writeFileSync('config/config.json', JSON.stringify(config, null, 2));
+          if (repBaseName != 'false') { // если есть файл на замену
+            // Запись названия новой базы в конфиг
+            config.rootDir = repBaseName + '/';
+            fs.writeFileSync('config/config.json', JSON.stringify(config, null, 2));
 
-          data.newActive = repBaseName;
-        } else {
-          data.newActive = false;
+            data.newActive = repBaseName;
+          } else {
+            data.newActive = false;
+          }
+
+          // Дата последней модификации
+          var lastUpdated = moment(fs.statSync(archive).mtime);
+          lastUpdated.locale('ru');
+          data.lastUpdated = lastUpdated.fromNow();
+
+          res.status(200).send(data);
         }
-
-        // Дата последней модификации
-        var lastUpdated = moment(fs.statSync(archive).mtime);
-        lastUpdated.locale('ru');
-        data.lastUpdated = lastUpdated.fromNow();
-
-        res.status(200).send(data);
-      }
-    });
+      });
+    }
   });
 
   // Ошибка архивации

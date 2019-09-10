@@ -8,10 +8,10 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
     "lint": "eslint '**/*.js'",
     "lint:fix": "eslint '**/*.js' --fix",
-    "test": "jest"
+    "test": "jest './testing/first.test.js' && jest './testing/second.test.js'"
   },
   "author": "Alex Pish",
   "license": "MIT",
@@ -26,9 +26,11 @@
     "express": "^4.16.4",
     "express-fileupload": "^1.0.0",
     "express-session": "^1.15.6",
+    "isnumeric": "^0.3.3",
     "moment": "^2.24.0",
     "node-7z": "^1.1.1",
-    "random": "^2.0.13",
+    "random": "^2.1.1",
+    "random-js": "^2.1.0",
     "reloader": "^1.0.2",
     "rimraf": "^3.0.0",
     "uniqid": "^5.0.3"
@@ -38,9 +40,14 @@
     "@babel/preset-env": "^7.5.5",
     "babel-jest": "^24.9.0",
     "eslint": "^6.3.0",
-    "install": "^0.13.0",
     "jest": "^24.9.0",
-    "jest-express": "^1.10.1",
-    "npm": "^6.11.2"
+    "npm": "^6.11.2",
+    "supertest": "^4.0.2"
+  },
+  "jest": {
+    "bail": true,
+    "setupFilesAfterEnv": [
+      "./routes/index.js"
+    ]
   }
 }

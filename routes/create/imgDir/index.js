@@ -6,7 +6,7 @@ module.exports = function (req, res) {
   var errDir = false;
   fs.readFile(config.srcDir + config.rootDir + config.json, (err) => {
     if (err) {
-      res.render('somethingWrong', { textError: require('../../../utils/errorOutput')() });
+      res.status(404).render('somethingWrong', { textError: require('../../../utils/errorOutput')() });
       errDir = true;
     }
   });
@@ -17,7 +17,7 @@ module.exports = function (req, res) {
         fs.mkdirSync(config.srcDir + config.rootDir + config.imageDir);
         res.redirect('/');
       }
-      else res.render('somethingWrong', { textError: 'Папка уже была создана!' });
+      else res.status(404).render('somethingWrong', { textError: 'Папка уже была создана!' });
     });
   }
 };

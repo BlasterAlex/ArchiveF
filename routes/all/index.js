@@ -15,7 +15,7 @@ module.exports = function (req, res) {
   });
 
   fs.readFile(config.srcDir + config.rootDir + config.json, (err, data) => {
-    if (err) res.render('somethingWrong', { textError: require('../../utils/errorOutput')() });
+    if (err) res.status(404).render('somethingWrong', { textError: require('../../utils/errorOutput')() });
     else if (!errImgFile) {
       var records = JSON.parse(data);
 
@@ -25,6 +25,6 @@ module.exports = function (req, res) {
         messages: req.flash('notify')
       });
     } else
-      res.render('somethingWrong', { textError: 'Не найдена папка изображений' });
+      res.status(404).render('somethingWrong', { textError: 'Не найдена папка изображений' });
   });
 };
