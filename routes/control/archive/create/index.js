@@ -42,7 +42,7 @@ module.exports = function (req, res) {
     if (myStream.info.get('Archives with Errors') === undefined) {
       rmdir(base, function (err) {
         if (err)
-          res.status(505).send(err);
+          res.status(505).send('Ошибка удаления папки');
         else {
 
           // Формирование объекта для отправки на фронт
@@ -71,6 +71,6 @@ module.exports = function (req, res) {
 
   // Ошибка архивации
   myStream.on('error', function (err) {
-    return res.status(505).send(err);
+    return res.status(505).send('Ошибка создания архива');
   });
 };
