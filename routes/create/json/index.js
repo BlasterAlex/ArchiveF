@@ -10,7 +10,7 @@ module.exports = function (req, res) {
       let json = JSON.stringify(records, null, 2);
       fs.writeFile(config.srcDir + config.rootDir + config.json, json, (err) => {
         if (err) res.send('Не удалось записать в JSON файл!');
-        res.redirect('/');
+        res.redirect(303, '/');
       });
     }
     else res.status(404).render('somethingWrong', { textError: 'Файл уже был создан!' });

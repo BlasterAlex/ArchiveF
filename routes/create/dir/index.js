@@ -16,7 +16,7 @@ module.exports = function (req, res) {
 
         fs.writeFile(config.srcDir + config.rootDir + config.json, json, (err) => {
           if (err) res.send('Не удалось записать в JSON файл!');
-          res.redirect('/');
+          res.redirect(303, '/');
         });
 
       });

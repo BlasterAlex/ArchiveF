@@ -2,9 +2,9 @@ import 'regenerator-runtime/runtime';
 const request = require('supertest');
 const fs = require('fs');
 const path = require('path');
-var config = JSON.parse(require('fs').readFileSync('config/config.json'));
-var testDir;
 
+var testDir = 'test' + require('uniqid')() + '1/';
+var config = JSON.parse(require('fs').readFileSync('config/config.json'));
 var server;
 
 // Настройка сервера
@@ -20,7 +20,7 @@ const initApp = () => {
   app.use(require('express-fileupload')());
   app.use('/', express.static('./views/public'));
   app.use('/', express.static('./src'));
-  // app.use('/', express.static(config.srcDir + config.rootDir + config.imageDir));
+  app.use('/', express.static(config.srcDir + config.rootDir + config.imageDir));
   app.use(require('cookie-parser')());
 
   // Session key
@@ -34,9 +34,9 @@ const initApp = () => {
 
   // Глобальные переменные
   app.use(function (req, res, next) {
-    res.locals.baseName = 'test';
-    res.locals.numOfLinks = 6;
-    res.locals.rowsShown = 10;
+    res.locals.baseName = config.rootDir.split('/')[0];
+    res.locals.numOfLinks = config.numOfLinks;
+    res.locals.rowsShown = config.rowsShown;
     next();
   });
 
@@ -52,15 +52,16 @@ const initApp = () => {
 };
 var app = initApp();
 
+/* ------- Запуск тестов ------- */
+
 describe('Test 1:', () => {
 
   // Запомнить название активной базы
   fs.writeFileSync(path.join(config.srcDir, 'oldActiveBase'), config.rootDir);
 
   // Заменить название базы на новое
-  config.rootDir = 'test' + require('uniqid')() + '1/';
+  config.rootDir = testDir;
   fs.writeFileSync('config/config.json', JSON.stringify(config, null, 2));
-  testDir = config.rootDir;
 
   beforeEach((done) => {
     server = app.listen(3000, (err) => {
@@ -74,7 +75,7 @@ describe('Test 1:', () => {
     return server && server.close(done);
   });
 
-  test('Create test base', (done) => {
+  test('Create test base via /control/base', (done) => {
     global.agent
       .post('/control/base')
       .type('form')
@@ -90,5 +91,16 @@ describe('Test 1:', () => {
       });
   });
 
-  require('./tests/base.js')(testDir);
+  describe('/control', () => {
+    // Получение списка файлов в пользовательской папке
+    test('GET: status', (done) => {
+      global.agent.get('/control').then((res) => {
+        expect(res.statusCode).toBe(200);
+        done();
+      });
+    });
+
+    require('./tests/base.js')(testDir);
+    // require('./tests/archive')(testDir);
+  });
 });
