@@ -1,4 +1,3 @@
-sudo: false
 language: node_js
 os: linux
 dist: bionic
@@ -6,10 +5,8 @@ dist: bionic
 node_js: 
   - node
 
-install:
-  - node --version
-
 script:
+  - node --version
   - npm run lint
   - npm run test
 
