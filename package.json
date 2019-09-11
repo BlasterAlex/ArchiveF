@@ -42,6 +42,7 @@
     "eslint": "^6.3.0",
     "jest": "^24.9.0",
     "npm": "^6.11.2",
+    "superagent": "^5.0.1",
     "supertest": "^4.0.2"
   },
   "jest": {
