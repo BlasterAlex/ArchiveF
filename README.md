@@ -1,6 +1,6 @@
 # ArchiveF
 
-[![GitHub](https://img.shields.io/github/license/BlasterAlex/ArchiveF)](https://github.com/BlasterAlex/ArchiveF/blob/master/LICENSE.md) ![Travis (.org)](https://img.shields.io/travis/BlasterAlex/ArchiveF) [![npm](https://img.shields.io/npm/v/npm?color=orange)](https://github.com/npm/cli/releases/latest) [![GitHub release (latest by date)](https://img.shields.io/github/v/release/BlasterAlex/ArchiveF)](https://github.com/BlasterAlex/ArchiveF/releases/latest)
+[![GitHub](https://img.shields.io/github/license/BlasterAlex/ArchiveF)](https://github.com/BlasterAlex/ArchiveF/blob/master/LICENSE.md) [![Travis (.org)](https://img.shields.io/travis/BlasterAlex/ArchiveF)](https://travis-ci.org/BlasterAlex/ArchiveF) [![npm](https://img.shields.io/npm/v/npm?color=orange)](https://github.com/npm/cli/releases/latest) [![GitHub release (latest by date)](https://img.shields.io/github/v/release/BlasterAlex/ArchiveF)](https://github.com/BlasterAlex/ArchiveF/releases/latest)
 
 `ArchiveF` - это веб-приложение, которое позволяет работать с файловой [“базой данных”](https://github.com/BlasterAlex/ArchiveF/wiki/%D0%A5%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5-%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85)  в формате JSON.
 
@@ -15,7 +15,7 @@ $ sudo npm install # for Linux
 ```
 Запуск сервера осуществляется командой:
 ```sh
-$ node index.js
+$ node server.js
 # or
 $ npm start
 ```
@@ -32,3 +32,11 @@ $ npm start
 <p align="center">
   <img src="./data/gif/slideshowInterface.gif" width="917"/>
 </p>
+
+# Тестирование
+Для запуска тестов используйте команду:
+```sh
+$ npm test
+```
+С программным кодом тестов можно ознакомиться в папке [``/testing``](/testing). 
+

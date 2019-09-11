@@ -17,12 +17,12 @@
   "license": "MIT",
   "dependencies": {
     "7zip-bin": "^5.0.3",
-    "autoprefixer": "^9.4.5",
+    "autoprefixer": "^9.6.1",
     "axios": "^0.19.0",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.3",
     "coveralls": "^3.0.6",
-    "ejs": "^2.6.1",
+    "ejs": "^2.7.1",
     "express": "^4.16.4",
     "express-fileupload": "^1.0.0",
     "express-session": "^1.15.6",
@@ -36,12 +36,12 @@
     "uniqid": "^5.0.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
+    "@babel/core": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
     "babel-jest": "^24.9.0",
     "eslint": "^6.3.0",
     "jest": "^24.9.0",
-    "npm": "^6.11.2",
+    "npm": "^6.11.3",
     "superagent": "^5.0.1",
     "supertest": "^4.0.2"
   },
