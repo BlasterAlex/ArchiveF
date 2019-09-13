@@ -85,7 +85,7 @@ module.exports = function (req, res) {
         } else { // если это новая запись
 
           // Загрузка картинок
-          let sampleFile; var length = req.files.Images.length;
+          var sampleFile; var length = req.files.Images.length;
           if (length == undefined) { // если всего одна картинка
             sampleFile = req.files.Images;
             extension = sampleFile.name.split(/\.(?=[^\.]+$)/)[1];
@@ -111,13 +111,12 @@ module.exports = function (req, res) {
               if (err)
                 return res.status(500).send(err);
             });
-
-            for (var j = 1; j < imgs.length; i++) {
-              let sampleFile = imgs[i];
-              extension = sampleFile.name.split(/\.(?=[^\.]+$)/)[1];
+            for (var j = 1; j < imgs.length; j++) {
+              let sFile = imgs[j];
+              extension = sFile.name.split(/\.(?=[^\.]+$)/)[1];
               imageName = id + j + '.' + extension;
 
-              sampleFile.mv(config.srcDir + config.rootDir + config.imageDir + imageName, function (err) {
+              sFile.mv(config.srcDir + config.rootDir + config.imageDir + imageName, function (err) {
                 if (err)
                   return res.status(500).send(err);
               });

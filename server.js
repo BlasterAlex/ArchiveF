@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Path
 app.use(fileUpload());
 app.use('/', express.static('./views/public'));
-app.use('/', express.static('./src'));
+app.use('/', express.static('./public'));
 app.use('/', express.static(config.srcDir + config.rootDir + config.imageDir));
 app.use(cookieParser());
 

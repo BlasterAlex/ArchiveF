@@ -19,7 +19,7 @@ const initApp = () => {
   // Path
   app.use(require('express-fileupload')());
   app.use('/', express.static('./views/public'));
-  app.use('/', express.static('./src'));
+  app.use('/', express.static('./public'));
   app.use('/', express.static(config.srcDir + config.rootDir + config.imageDir));
   app.use(require('cookie-parser')());
 
