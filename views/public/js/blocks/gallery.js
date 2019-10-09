@@ -40,6 +40,14 @@ var images;
 // Загрузка страницы
 $(document).ready(function () { images = new Images; });
 
+$(document).on('mouseover', '.recordRedCross', function () {
+  $(this).width(22);
+});
+
+$(document).on('mouseout', '.recordRedCross', function () {
+  $(this).width(20);
+});
+
 // Удаление изображения
 $(document).on('click', '.recordRedCross', function () {
   let delBtn = $(this);

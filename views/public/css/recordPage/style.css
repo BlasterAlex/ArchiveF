@@ -83,11 +83,6 @@
   transition: all 0.2s;
 }
 
-.recordRedCross:hover {
-  opacity: 1;
-  transform: scale(1.15) translateY(-1px);
-}
-
 /* Content part */
 .record-content {
     padding-left: 30px;
