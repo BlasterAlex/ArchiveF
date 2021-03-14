@@ -3,6 +3,8 @@ const path = require('path');
 const rmdir = require('rimraf');
 const moment = require('moment');
 const Seven = require('node-7z');
+
+const pathTo7zip = require('7zip-bin').path7za;
 var config = JSON.parse(fs.readFileSync('config/config.json'));
 
 module.exports = function (req, res) {
@@ -26,20 +28,29 @@ module.exports = function (req, res) {
 
   // Формирование объекта
   let data = {
+    $bin: pathTo7zip,
     recursive: true
   };
 
   if (password.length)
     data.password = password;
 
-  // Создание архива
+  // Проверка архива
   var archive = path.join(config.srcDir, baseName + '.7z');
-  const myStream = Seven.add(archive, base, data);
+  if (fs.existsSync(archive)) {
+    return res.status(505).send('Архив с таким именем существует!');
+  }
 
+  // Создание архива
+  const myStream = Seven.add(archive, base, data);
 
   // Архивация завершена
   myStream.on('end', function () {
-    if (myStream.info.get('Archives with Errors') === undefined) {
+    if (
+      myStream.info.get('Archives with Errors') === undefined &&
+      myStream.info.get('Creating archive') !== undefined
+    ) {
+
       rmdir(base, function (err) {
         if (err)
           res.status(505).send('err');
@@ -71,6 +82,8 @@ module.exports = function (req, res) {
 
   // Ошибка архивации
   myStream.on('error', function (err) {
+    if (err.code === 'ENOENT')
+      return res.status(505).send('Не удалось найти программу для архивации');
     return res.status(505).send(err);
   });
 };

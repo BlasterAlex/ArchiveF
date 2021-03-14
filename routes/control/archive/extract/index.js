@@ -3,6 +3,9 @@ const path = require('path');
 const rmdir = require('rimraf');
 const moment = require('moment');
 const Seven = require('node-7z');
+const getSize = require('get-folder-size');
+
+const pathTo7zip = require('7zip-bin').path7za;
 var config = JSON.parse(fs.readFileSync('config/config.json'));
 
 module.exports = function (req, res) {
@@ -22,133 +25,150 @@ module.exports = function (req, res) {
 
   // Выполнение разархивирования
   const myStream = Seven.extractFull(archive, config.srcDir, {
+    $bin: pathTo7zip,
     $progress: true,
     noRootDuplication: true,
     password: password
   });
 
+
   // Разархивирование завершено
   myStream.on('end', function () {
-    if (myStream.info.get('Archives with Errors') === undefined) {
 
-      // Создание объекта новой базы
-      let baseObj = {
-        baseName: baseName
-      };
+    // Если не произошла внутренняя ошибка
+    if (myStream.info.size) {
 
-      // Для обработки ошибок
-      var error;
+      // Проверка папки базы
+      if (fs.existsSync(base) && fs.statSync(base).isDirectory())
+        getSize(base, function (err, size) {
+          if (err) { throw err; }
+          if (!size) return;
 
-      // Проверка папки изображений
-      let imageDir = path.join(base, config.imageDir);
-      try {
-        // Создать папку изображений
-        if (!fs.existsSync(imageDir))
-          fs.mkdirSync(imageDir);
-      } catch (e) {
-        error = 'Невозможно создать папку изображений для \'' + baseName + '\', существует файл с таким именем!';
-      }
+          // Создание объекта новой базы
+          let baseObj = {
+            baseName: baseName
+          };
 
-      // Проверка аватарки базы
-      let files = fs.readdirSync(base);
-      for (var i in files) {
-        if (files[i].match(config.avatarName + '.*') && fs.statSync(path.join(base, files[i])).isFile()) {
-          baseObj.avatar = path.join(baseName, files[i]);
-          break;
-        } else {
-          baseObj.avatar = false;
-        }
-      }
+          // Для обработки ошибок
+          var error;
 
-      // Проверка json файла
-      let jsonFile = path.join(base, config.json);
-      baseObj.json = {};
+          // Проверка папки изображений
+          let imageDir = path.join(base, config.imageDir);
+          try {
+            // Создать папку изображений
+            if (!fs.existsSync(imageDir))
+              fs.mkdirSync(imageDir);
+          } catch (e) {
+            error = 'Невозможно создать папку изображений для \'' + baseName + '\', существует файл с таким именем!';
+          }
 
-      if (fs.existsSync(jsonFile)) { // json файл существует
+          // Проверка аватарки базы
+          let files = fs.readdirSync(base);
+          for (var i in files) {
+            if (files[i].match(config.avatarName + '.*') && fs.statSync(path.join(base, files[i])).isFile()) {
+              baseObj.avatar = path.join(baseName, files[i]);
+              break;
+            } else {
+              baseObj.avatar = false;
+            }
+          }
 
-        // Чтение файла
-        let json = fs.readFileSync(jsonFile);
-        if (json) {
-          json = JSON.parse(json);
-          baseObj.json.size = json.length;
-        }
+          // Проверка json файла
+          let jsonFile = path.join(base, config.json);
+          baseObj.json = {};
 
-      } else {
+          if (fs.existsSync(jsonFile)) { // json файл существует
 
-        baseObj.json.size = 0;
-        try {
-          // Создать json файл
-          var records = [];
-          let jsonBlame = JSON.stringify(records, null, 2);
-          fs.writeFileSync(jsonFile, jsonBlame);
-        } catch (err) {
-          error = 'Невозможно создать файл \'' + config.json + '\' для \'' + baseName + '\'';
-        }
-      }
+            // Чтение файла
+            let json = fs.readFileSync(jsonFile);
+            if (json) {
+              json = JSON.parse(json);
+              baseObj.json.size = json.length;
+            }
 
-      // Проверка информационного файла
-      let aboutFile = path.join(base, config.about);
-      if (fs.existsSync(aboutFile)) { // json файл существует
-        // Чтение файла
-        let about = JSON.parse(fs.readFileSync(aboutFile, 'utf-8'));
-        if (about) {
-          baseObj.description = about.description;
-        }
-      } else {
-        baseObj.description = '';
-        try {
-          // Создать json файл
-          let aboutBlame = JSON.stringify({ description: '' }, null, 2);
-          fs.writeFileSync(aboutFile, aboutBlame);
-        } catch (err) {
-          error = 'Невозможно создать файл \'' + config.about + '\' для \'' + baseName + '\'';
-        }
-      }
+          } else {
 
-      // Состояние активности
-      baseObj.isActive = false;
+            baseObj.json.size = 0;
+            try {
+              // Создать json файл
+              var records = [];
+              let jsonBlame = JSON.stringify(records, null, 2);
+              fs.writeFileSync(jsonFile, jsonBlame);
+            } catch (err) {
+              error = 'Невозможно создать файл \'' + config.json + '\' для \'' + baseName + '\'';
+            }
+          }
 
-      // Дата последнего изменения базы
-      try {
-        let imageDirLast = moment(fs.statSync(imageDir).mtime);
-        let rootDirLast = moment(fs.statSync(base).mtime);
-        var lastUpdated;
+          // Проверка информационного файла
+          let aboutFile = path.join(base, config.about);
+          if (fs.existsSync(aboutFile)) { // json файл существует
+            // Чтение файла
+            let about = JSON.parse(fs.readFileSync(aboutFile, 'utf-8'));
+            if (about) {
+              baseObj.description = about.description;
+            }
+          } else {
+            baseObj.description = '';
+            try {
+              // Создать json файл
+              let aboutBlame = JSON.stringify({ description: '' }, null, 2);
+              fs.writeFileSync(aboutFile, aboutBlame);
+            } catch (err) {
+              error = 'Невозможно создать файл \'' + config.about + '\' для \'' + baseName + '\'';
+            }
+          }
 
-        if (imageDirLast.isAfter(rootDirLast))
-          lastUpdated = imageDirLast;
-        else
-          lastUpdated = rootDirLast;
+          // Состояние активности
+          baseObj.isActive = false;
 
-        lastUpdated.locale('ru');
-        baseObj.lastUpdated = lastUpdated.fromNow();
-      } catch (e) {
-        error = 'Не существует папки изображений для \'' + baseName + '\'';
-      }
+          // Дата последнего изменения базы
+          try {
+            let imageDirLast = moment(fs.statSync(imageDir).mtime);
+            let rootDirLast = moment(fs.statSync(base).mtime);
+            var lastUpdated;
 
-      baseObj.isArchive = false;
+            if (imageDirLast.isAfter(rootDirLast))
+              lastUpdated = imageDirLast;
+            else
+              lastUpdated = rootDirLast;
 
-      if (error) { // ошибка
-        rmdir(base, function (err) {
-          if (err)
-            res.status(505).send(err);
-          else
-            res.status(505).send(error);
+            lastUpdated.locale('ru');
+            baseObj.lastUpdated = lastUpdated.fromNow();
+          } catch (e) {
+            error = 'Не существует папки изображений для \'' + baseName + '\'';
+          }
+
+          baseObj.isArchive = false;
+
+          if (error) { // ошибка
+            rmdir(base, function (err) {
+              if (err)
+                res.status(505).send(err);
+              else
+                res.status(505).send(error);
+            });
+          } else { // все хорошо
+            fs.unlinkSync(archive);
+            res.status(200).send(baseObj);
+          }
         });
-      } else { // все хорошо
-        fs.unlinkSync(archive);
-        res.status(200).send(baseObj);
-      }
     }
   });
 
+
   // Ошибка архивации
-  myStream.on('error', function () {
-    // При ошибке пароля все равно создается папка с базой
+  myStream.on('error', function (err) {
+    if (err.code === 'ENOENT') {
+      return res.status(505).send('Не удалось найти программу для архивации');
+    }
+
+    // При ошибке все равно создается папка с базой
     rmdir(base, function (error) {
       if (error)
-        res.status(505).send(error);
-      else
-        res.status(505).send('Неправильный пароль!');
+        console.error(error);
+      if (err.code === undefined) {
+        return res.status(505).send('Неправильный пароль!');
+      }
     });
   });
 };
