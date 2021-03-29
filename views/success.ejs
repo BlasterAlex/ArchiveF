@@ -1,20 +1,25 @@
 <!DOCTYPE html>
 <html>
- <head>
+
+<head>
   <title>Успех</title>
   <link rel="stylesheet" href="/css/all/style.css" type="text/css">
-  <% include blocks/head.ejs %>
- </head>
- <body>
-    <header>
-        <% include blocks/header.ejs %>
-    </header>
-    <article style='text-align: center; padding-top: 40px;'>
-        <h1>Eaah!</h1>
-        <h2><%= message %></h2>
-        <div style= 'margin-top: 20px;'>
-            <a href="/" style="font-family: 'Dewberry', sans-serif; font-size: 20px;">На главную</a>
-        </div>
-    </article>
- </body>
+  <%- include('blocks/head.ejs') %>
+</head>
+
+<body>
+  <header>
+    <%- include('blocks/header.ejs') %>
+  </header>
+  <article style='text-align: center; padding-top: 40px;'>
+    <h1>Eaah!</h1>
+    <h2>
+      <%= message %>
+    </h2>
+    <div style='margin-top: 20px;'>
+      <a href="/" style="font-family: 'Dewberry', sans-serif; font-size: 20px;">На главную</a>
+    </div>
+  </article>
+</body>
+
 </html>

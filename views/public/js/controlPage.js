@@ -234,7 +234,7 @@ $(document).on('click', '.card-description-readmore', function () {
 // Активирование базы
 $(document).on('click', '.card-button-activate', function () {
 
-  let baseName = $(this).closest('.row').find('.card-title').text();
+  let baseName = $(this).closest('.row').find('.card-title').text().trim();
   if (confirm('Вы действительно хотите активировать ' + baseName + '?') === true) {
 
     // Сбор данных для отправки

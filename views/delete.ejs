@@ -5,85 +5,94 @@
   <title>Удалить</title>
   <link rel="stylesheet" href="/css/delete/style.css" type="text/css">
   <link rel="stylesheet" href="/css/all/style.css" type="text/css">
-  <% include blocks/head.ejs %>
-  <script>
-    $(document).ready(function () {
-      var records = JSON.parse($('#recordList').text());
+  <%- include('blocks/head.ejs') %>
+    <script>
+      $(document).ready(function () {
+        var records = JSON.parse($('#recordList').text());
 
-      $("#inputState").change(function (data) {
-        let index = parseInt($(this).val());
+        $("#inputState").change(function (data) {
+          let index = parseInt($(this).val());
 
-        $('#del-element').fadeOut(250, function () {
-          $(this).find('th:first').text(index + 1);
+          $('#del-element').fadeOut(250, function () {
+            $(this).find('th:first').text(index + 1);
 
-          $(this).find('td:first a').text(records[index].name);
-          $(this).find('td:first a').attr('href', 'record/' + records[index].id);
+            $(this).find('td:first a').text(records[index].name);
+            $(this).find('td:first a').attr('href', 'record/' + records[index].id);
 
-          $(this).find('td:eq(1) a').attr('href', records[index].img);
-          $(this).find('td:eq(1) img').attr('src', records[index].img);
+            $(this).find('td:eq(1) a').attr('href', records[index].img);
+            $(this).find('td:eq(1) img').attr('src', records[index].img);
 
-          $(this).fadeIn(250);
+            $(this).fadeIn(250);
+          });
         });
-      });
-    })
-  </script>
+      })
+    </script>
 </head>
 
 <body>
-  <% include blocks/preloader.ejs %>
-  <header>
-    <% include blocks/header.ejs %>
-  </header>
-  <article style="text-align: center">
-    <% if (errors.length != 0) { %>
-    <div class="alert alert-danger" style="display: inline-flex; flex-direction: column; margin: 0 auto 10px auto;">
-      <% for (var i = 0; i < errors.length; i++) { %>
-      <div><%= errors[i] %></div>
-      <% } %>
-    </div>
-    <% } %>
-    <% if (records.length === 0) { %>
-    <div class="noRec">
-      <h3> В базе пока нет ни одной записи... </h3>
-      <div><a href="/add">Создать новую</a></div>
-    </div>
-    <% } else { %>
-    <form action='/del' method='post'>
-      <div class="form-group">
-        <label for="inputState">Выберите запись для удаления</label>
-        <select id="inputState" class="form-control" name="sel" style="max-width: 300px; margin: 0 auto;">
-          <% for(var i=0; i<records.length; i++) { %>
-          <option value=<%= i %>><%= records[i].name %></option>
-          <% } %>
-        </select>
-      </div>
-      <button type="submit" class="btn btn-primary">Delete</button>
-    </form>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Num</th>
-          <th>Name</th>
-          <th>Photo</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr id="del-element">
-          <th scope="row"><%= 1 %></th>
-          <td><a href="record/<%= records[0].id %>"><%= records[0].name %></a></td>
-          <td>
-            <div class="tableImgCont">
-              <a href=<%= records[0].img %>>
-                <img src="<%= records[0].img %>" onerror="this.src='img/default.jpg'" />
-              </a>
+  <%- include('blocks/preloader.ejs') %>
+    <header>
+      <%- include('blocks/header.ejs') %>
+    </header>
+    <article style="text-align: center">
+      <% if (errors.length !=0) { %>
+        <div class="alert alert-danger" style="display: inline-flex; flex-direction: column; margin: 0 auto 10px auto;">
+          <% for (var i=0; i < errors.length; i++) { %>
+            <div>
+              <%= errors[i] %>
             </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <span id="recordList" hidden="true"><%= JSON.stringify(records) %></span>
-    <% } %>
-  </article>
+            <% } %>
+        </div>
+        <% } %>
+          <% if (records.length===0) { %>
+            <div class="noRec">
+              <h3> В базе пока нет ни одной записи... </h3>
+              <div><a href="/add">Создать новую</a></div>
+            </div>
+            <% } else { %>
+              <form action='/del' method='post'>
+                <div class="form-group">
+                  <label for="inputState">Выберите запись для удаления</label>
+                  <select id="inputState" class="form-control" name="sel" style="max-width: 300px; margin: 0 auto;">
+                    <% for(var i=0; i<records.length; i++) { %>
+                      <option value=<%=i %>><%= records[i].name %>
+                      </option>
+                      <% } %>
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Delete</button>
+              </form>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Num</th>
+                    <th>Name</th>
+                    <th>Photo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr id="del-element">
+                    <th scope="row">
+                      <%= 1 %>
+                    </th>
+                    <td><a href="record/<%= records[0].id %>">
+                        <%= records[0].name %>
+                      </a></td>
+                    <td>
+                      <div class="tableImgCont">
+                        <a href=<%=records[0].img %>>
+                          <img src="<%= records[0].img %>" onerror="this.src='img/default.jpg'" />
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <span id="recordList" hidden="true">
+                <%= JSON.stringify(records) %>
+              </span>
+              <% } %>
+    </article>
 </body>
 
 </html>

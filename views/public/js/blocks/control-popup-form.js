@@ -647,7 +647,7 @@ function removeArchive(archName) {
 $(document).on('click', '.card-button-archive', function () {
 
   let card = $(this).closest('.control-card');
-  let baseName = card.find('.card-title').text();
+  let baseName = card.find('.card-title').text().trim();
 
   if (confirm('Вы действительно хотите архивировать ' + baseName + '?') === true) {
     // Проверка активности текущей базы
@@ -664,7 +664,7 @@ $(document).on('click', '.card-button-archive', function () {
 
 // Нажатие кнопки распаковки архива
 $(document).on('click', '.card-button-archive-extract', function () {
-  let archName = $(this).closest('.row').find('.card-title').text();
+  let archName = $(this).closest('.row').find('.card-title').text().trim();
   if (confirm('Вы действительно хотите распаковать ' + archName + '?') === true) {
     passwordEntryForm(archName);
   }
@@ -809,7 +809,7 @@ $(document).on('click', '.card-button-remove', function () {
   let cardButtons = $(this).closest('.card-buttons-block');
 
   // Сбор данных для отправки
-  let data = { baseName: $(this).closest('.row').find('.card-title').text() };
+  let data = { baseName: $(this).closest('.row').find('.card-title').text().trim() };
 
   if (confirm('Вы действительно хотите удалить ' + data.baseName + '?') === true) {
 
