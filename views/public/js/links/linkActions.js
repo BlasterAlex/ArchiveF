@@ -149,14 +149,17 @@ function addLinkInput() {
 
 // Удаление блока ссылки 
 function delLinkInput(elem) {
+
+  const inputFields = $(elem).parents('.input-group');
+
   // Очистить поля
-  $(elem).parents('.input-group').children('.form-control').val('');
+  inputFields.children('.form-control').val('');
 
   // Скрыть элемент
-  $(elem).parents('.input-group').slideUp(300, function () {
+  inputFields.slideUp(300, function () {
 
     // Удалить текущий элемент
-    $(elem).remove();
+    inputFields.remove();
 
     // Обновить индикаторы
     checkExLinks();
