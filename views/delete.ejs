@@ -50,7 +50,8 @@
               <div><a href="/add">Создать новую</a></div>
             </div>
             <% } else { %>
-              <form action='/del' method='post'>
+              <form action='/del' method='post'
+                onsubmit="return confirm(`Вы действительно хотите удалить запись ${this.sel.options[this.sel.value].text}?`);">
                 <div class="form-group">
                   <label for="inputState">Выберите запись для удаления</label>
                   <select id="inputState" class="form-control" name="sel" style="max-width: 300px; margin: 0 auto;">
