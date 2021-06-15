@@ -59,6 +59,12 @@
   overflow: hidden;
   display: flex;
   justify-content: center;
+  transition: all 0.2s;
+}
+
+.tableImgCont:hover {
+  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.4);
+  transform: translate(-1.5px, -1.5px);
 }
 
 .tableImgCont img {

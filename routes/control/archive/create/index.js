@@ -8,8 +8,8 @@ const pathTo7zip = require('7zip-bin').path7za;
 var config = JSON.parse(fs.readFileSync('config/config.json'));
 
 module.exports = function (req, res) {
-  let baseName = req.body.baseName;
-  let repBaseName = req.body.repBase;
+  let baseName = req.body.baseName.trim();
+  let repBaseName = req.body.repBase.trim();
   let password = req.body.password;
   let src = config.srcDir;
   let base = path.join(src, baseName);
