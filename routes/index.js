@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/random', require('./random'));
-
 router.use('/add', require('./add'));
 router.use('/del', require('./del'));
 router.use('/control', require('./control'));
