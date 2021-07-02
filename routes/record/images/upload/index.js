@@ -13,29 +13,16 @@ var getIndex = function (arr, id) {
 };
 
 // Для избежания дублирования имен
-var getName = function (record, extension) {
-  var check = false;
-  var counter = 1;
-  var name = record.id;
-  while (!check) {
-    if (record.img != name + '.' + extension) {
-      if (record.addImages.length != 0) {
-        record.addImages.forEach(element => {
-          if (element != name + '.' + extension && record.img != name + '.' + extension) check = true;
-          else {
-            check = false;
-            if (name != record.id) name = name.substring(0, name.length - 1);
-            name += counter++;
-          }
-        });
-      } else check = true;
-    } else {
-      if (name != record.id) name = name.substring(0, name.length - 1);
-      name += counter++;
-    }
-  }
-  return name + '.' + extension;
-};
+const getUniqueName = (record, extension, index = 0) => {
+  const fileNames = [record.img].concat(record.addImages);
+  const fileName = index ? `${record.id}${index}.${extension}` : `${record.id}.${extension}`;
+
+  const nameExists = fileNames.filter(f => f === fileName).length > 0;
+  if (!nameExists)
+    return fileName;
+
+  return getUniqueName(record, extension, index + 1);
+}
 
 module.exports = function (req, res) {
 
@@ -54,15 +41,23 @@ module.exports = function (req, res) {
         res.status(404).send('record not found');
       } else {
         var length = req.files.array.length;
-        var oldLength = records[index].addImages.length;
 
         if (length == undefined) { // если всего одна новая картинка
-          if (oldLength + 2 > 4) {
-            return res.status(400).send('too many images');
-          } else {
-            let sampleFile = req.files.array;
+          let sampleFile = req.files.array;
+          let extension = sampleFile.name.split(/\.(?=[^\.]+$)/)[1];
+          let imageName = getUniqueName(records[index], extension);
+          records[index].addImages.push(imageName);
+          newImages.push(imageName);
+
+          sampleFile.mv(config.srcDir + config.rootDir + config.imageDir + imageName, function (err) {
+            if (err)
+              return res.status(500).send(err);
+          });
+        } else { // если несколько
+          for (var i = 0; i < length; i++) {
+            let sampleFile = req.files.array[i];
             let extension = sampleFile.name.split(/\.(?=[^\.]+$)/)[1];
-            let imageName = getName(records[index], extension);
+            let imageName = getUniqueName(records[index], extension);
             records[index].addImages.push(imageName);
             newImages.push(imageName);
 
@@ -70,24 +65,6 @@ module.exports = function (req, res) {
               if (err)
                 return res.status(500).send(err);
             });
-          }
-        } else { // если несколько
-          if (oldLength + length + 1 > 4) {
-            return res.status(400).send('too many images');
-          }
-          else {
-            for (var i = 0; i < length; i++) {
-              let sampleFile = req.files.array[i];
-              let extension = sampleFile.name.split(/\.(?=[^\.]+$)/)[1];
-              let imageName = getName(records[index], extension);
-              records[index].addImages.push(imageName);
-              newImages.push(imageName);
-
-              sampleFile.mv(config.srcDir + config.rootDir + config.imageDir + imageName, function (err) {
-                if (err)
-                  return res.status(500).send(err);
-              });
-            }
           }
         }
 

@@ -8,100 +8,102 @@ function imgLoad(img) { // eslint-disable-line
   $(img).parent().fadeIn(400);
 }
 
-// Расположение изображений
-class Images {
-  constructor() {
-    this.img = $('#largePic').attr('name');
+// Перемещение слайда в слайдере
+const splideMove = (splide, from, to) => {
+  const slides = splide.Components.Elements.slides;
+  const slide = slides[from].cloneNode(true);
+  splide.remove(from);
+  splide.add(slide, to);
+  splide.go(to);
+};
 
-    let bImages = new Array;
-    $('.smallPic').each(function (i, el) {
-      bImages.push($(el).attr('name'));
-    });
-    this.addImages = bImages;
-  }
-
-  isChanged() { // получение текущего состояния изображений
-    if (this.img == $('#largePic').attr('name')) {
-      let bImages = this.addImages;
-      let check = false;
-
-      $('.smallPic').each(function (i, el) {
-        if ($(el).attr('name') != bImages[i])
-          check = true;
-      });
-
-      return check;
-    } else
-      return true;
-  }
+// Добавление картинок на слайдер
+const splideAddImages = (primarySlider, secondarySlider, images) => {
+  images.forEach(img => {
+    primarySlider.add(`<li class="splide__slide">
+    <div style="display: flex; justify-content: center; ">
+      <a href="/${img}" target="_blank">
+        <img src="/${img}" name="${img}" id="largePic" onload="imgLoad(this)"
+          onerror="imgError(this)" style="height: auto;" />
+      </a>
+    </div>
+  </li>`);
+    secondarySlider.add(`<li class="splide__slide smallSlide">
+    <img src="/${img}" name="${img}" onload="imgLoad(this)" onerror="imgError(this)"
+      style="height: auto;" />
+    </li>`);
+  });
+  primarySlider.go(primarySlider.length);
+  secondarySlider.go(secondarySlider.length);
 }
-var images;
 
 // Загрузка страницы
-$(document).ready(function () { images = new Images; });
+$(document).ready(function () {
 
-$(document).on('mouseover', '.recordRedCross', function () {
-  $(this).width(22);
-});
+  const recordID = $('.record-page').attr('id');
 
-$(document).on('mouseout', '.recordRedCross', function () {
-  $(this).width(20);
-});
+  // Create and mount the thumbnails slider.
+  var secondarySlider = new Splide('#secondary-slider', {
+    rewind: true,
+    fixedWidth: 100,
+    fixedHeight: 104,
+    isNavigation: true,
+    gap: 10,
+    focus: 'center',
+    pagination: false,
+    cover: true,
+    breakpoints: {
+      '600': {
+        fixedWidth: 66,
+        fixedHeight: 40,
+      }
+    }
+  }).mount();
 
-// Удаление изображения
-$(document).on('click', '.recordRedCross', function () {
-  let delBtn = $(this);
-  let photo = delBtn.siblings('.smallPic').attr('name');
-  let id = $('.record-page').attr('id');
+  // Create the main slider.
+  var primarySlider = new Splide('#primary-slider', {
+    type: 'fade',
+    autoHeight: true,
+    pagination: false,
+    arrows: false,
+    width: '500px',
+  });
 
-  let quest = confirm('Будет удалено фото: ' + photo + '\nИз записи: ' + id + '\n\nВы уверены?');
+  // Set the thumbnails slider as a sync target and then call mount.
+  primarySlider.sync(secondarySlider).mount();
 
-  if (quest === true) { // удаление изображения
+  var saveFirstButton = document.querySelector('.save-first-button');
+  var addButton = document.querySelector('.add-button');
+  var removeButton = document.querySelector('.remove-button');
+  var imageInput = document.getElementById('splide-image-input');
 
-    let data = { // сбор данных с формы
-      id: id,
-      picName: photo
+  // Переместить картинки
+  saveFirstButton.addEventListener('click', function () {
+    const slides = primarySlider.Components.Elements.slides;
+    const pictures = slides.map(element => $(element).find('img').attr('name'));
+    const currentIndex = primarySlider.index;
+    const largeImg = pictures.splice(currentIndex, 1);
+
+    // Сбор данных о текущем расположении картинок
+    const data = {
+      id: recordID,
+      img: largeImg,
+      addImages: pictures
     };
 
     $.ajax({ // отправка запроса на бэк
       url: '/record/images',
-      method: 'DELETE',
+      method: 'PUT',
       data: data
     }).done(function (res) { // успех
-      $('article').prepend('<div class="alert alert-success"><div>Запись ' + res.name + ' успешно обновлена</div></div>');
 
-      if (res.warning) // фото не существует
-        $('article').prepend('<div class="alert alert-warning"><div>Изображение ' + photo + ' не существует!</div></div>');
+      splideMove(primarySlider, currentIndex, 0);
+      splideMove(secondarySlider, currentIndex, 0);
 
-      $('#record-dateOfChange').text(res.dateOfChange); // обновление даты изменения записи
+      $('#record-dateOfChange').text(res.dateOfChange); // обновление даты изменения
       if ($('#record-dateOfChange').parent().css('display') === 'none')
         $('#record-dateOfChange').parent().fadeIn(300);
 
-      delBtn.parent().fadeOut(300, function () { // удалить фото на странице
-        $(this).remove(); // удаление фото
-
-        if (!$('.add_picture_link').length) { // добавление формы для загрузки фото
-          $('#thumbs')
-            .append('<div class="add_picture_link">\n' +
-              '  <div>\n' +
-              '    <img id="upload-image" src="/img/plus.png">\n' +
-              '    <input type="file" id="file-input" name="Images" required multiple />\n' +
-              '    <label id="get-file-label">Выберите файл</label>\n' +
-              '    <span>или перетащите его сюда</span>\n' +
-              '  </div>\n' +
-              '</div>')
-            .ready(function () {
-              beSquare();
-              $('.add_picture_link')
-                .css({ 'opacity': 0 })
-                .animate({ 'opacity': 1 }, 300);
-            });
-        }
-
-        images = new Images; // сохранение нового состояния изображений
-      });
-
-      clearFlash();
     }).fail(function (res) { // ошибка
       if (res.status === 404) {
         switch (res.responseText) {
@@ -112,92 +114,125 @@ $(document).on('click', '.recordRedCross', function () {
             $('article').prepend('<div class="alert alert-danger"><div>Элемент не найден!</div></div>');
             clearFlash();
             break;
-          case 'image not found': // не найдена картинка
-            $('article').prepend('<div class="alert alert-danger"><div>Изображениe ' + data.picName + ' не найдено!</div></div>');
-            clearFlash();
-            break;
         }
       }
     });
-  }
-});
 
-// Свап фото по нажатию
-$(document).on('click', '.smallPic', function () {
-
-  let large = {
-    src: $('#largePic').attr('src'),
-    name: $('#largePic').attr('name')
-  };
-  let small = {
-    src: this.src,
-    name: this.name
-  };
-
-  $('#largePic').fadeOut(150, function () {
-    $(this).attr('src', small.src);
-    $(this).attr('name', small.name);
-    $('#largePicLink').attr('href', small.src);
-
-    $(this).fadeIn(150);
   });
 
-  let smallPic = this;
-  $(this).parents('.smallPicContainer').fadeOut(150, function () {
-    smallPic.src = large.src;
-    smallPic.name = large.name;
-    $(this).find('.picName').val(large.name);
-    $(smallPic).fadeIn(150);
-
-    // Отображение кнопки Применить изменения
-    if (images.isChanged()) {
-      if ($('#recordAccept').css('display') === 'none')
-        $('#recordAccept').fadeIn(300);
-    } else {
-      if ($('#recordAccept').css('display') !== 'none')
-        $('#recordAccept').fadeOut(300);
-    }
+  // Добавить картинку
+  addButton.addEventListener('click', function () {
+    imageInput.click();
   });
-});
+  imageInput.addEventListener('change', function () {
+    const formData = new FormData();
+    formData.append('id', recordID);
 
-// Применение изменений
-$(document).on('click', '#recordAccept', function () {
+    // Формирование массива файлов
+    var files = $(imageInput.files);
+    files.each(function (i, file) {
+      formData.append('array', file);
+    });
 
-  // Сбор данных о текущем расположении картинок
-  var data = {
-    id: $('.record-page').attr('id'),
-    img: $('#largePic').attr('name'),
-    addImages: new Array
-  };
-  $('.smallPic').each(function (i, el) {
-    data.addImages.push($(el).attr('name'));
-  });
+    $.ajax({ // отправка запроса на бэк
+      url: '/record/images',
+      method: 'POST',
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      dataType: 'json'
+    }).done(function (res) { // успех
+      $('article').prepend('<div class="alert alert-success"><div>Запись ' + res.name + ' успешно обновлена</div></div>');
 
-  // Отправка запроса на изменение расположения картинок
-  $.ajax({ // отправка запроса на бэк
-    url: '/record/images',
-    method: 'PUT',
-    data: data
-  }).done(function (res) { // успех
+      $('#record-dateOfChange').text(res.dateOfChange); // обновление даты изменения записи
+      if ($('#record-dateOfChange').parent().css('display') === 'none')
+        $('#record-dateOfChange').parent().fadeIn(300);
 
-    images = new Images; // сохранение нового состояния изображений
-    $('#recordAccept').fadeOut(300);
+      splideAddImages(primarySlider, secondarySlider, res.newImages);
 
-    $('#record-dateOfChange').text(res.dateOfChange); // обнолвение даты изменения
-    if ($('#record-dateOfChange').parent().css('display') === 'none')
-      $('#record-dateOfChange').parent().fadeIn(300);
-
-  }).fail(function (res) { // ошибка
-    if (res.status === 404) {
-      switch (res.responseText) {
-        case 'file not found': // обновить окно, на беке тут подключается новый шаблон
-          window.location.reload();
+      clearFlash();
+    }).fail(function (res) { // ошибка
+      switch (res.status) {
+        case 404: // не найдено
+          switch (res.responseText) {
+            case 'file not found': // обновить окно, на беке тут подключается новый шаблон
+              window.location.reload();
+              break;
+            case 'record not found': // не найдена запись
+              $('article').prepend('<div class="alert alert-danger"><div>Элемент не найден!</div></div>');
+              clearFlash();
+              break;
+            case 'image not found': // не найдена картинка
+              $('article').prepend('<div class="alert alert-danger"><div>Изображениe ' + data.picName + ' не найдено!</div></div>');
+              clearFlash();
+              break;
+          }
           break;
-        case 'record not found': // не найдена запись
-          $('article').prepend('<div class="alert alert-danger"><div>Элемент не найден!</div></div>');
+        case 500: // ошибка сервера
+          $('article').prepend('<div class="alert alert-danger"><div>' + res.responseText + '</div></div>');
           clearFlash();
           break;
       }
-    }
+    });
+
+    $(imageInput).val('');
+
   });
+
+  // Удаление картинки
+  removeButton.addEventListener('click', function () {
+    const slides = primarySlider.Components.Elements.slides;
+    const currentIndex = primarySlider.index;
+    const slide = slides[currentIndex];
+    const photo = $(slide).find('img').attr('name');
+
+    let quest = confirm('Будет удалено фото: ' + photo + '\nИз записи: ' + recordID + '\n\nВы уверены?');
+
+    if (quest === true) { // удаление изображения
+
+      let data = { // сбор данных с формы
+        id: recordID,
+        picName: photo
+      };
+
+      $.ajax({ // отправка запроса на бэк
+        url: '/record/images',
+        method: 'DELETE',
+        data: data
+      }).done(function (res) { // успех
+        $('article').prepend('<div class="alert alert-success"><div>Запись ' + res.name + ' успешно обновлена</div></div>');
+
+        if (res.warning) // фото не существует
+          $('article').prepend('<div class="alert alert-warning"><div>Изображение ' + photo + ' не существует!</div></div>');
+
+        $('#record-dateOfChange').text(res.dateOfChange); // обновление даты изменения записи
+        if ($('#record-dateOfChange').parent().css('display') === 'none')
+          $('#record-dateOfChange').parent().fadeIn(300);
+
+        primarySlider.remove(currentIndex);
+        secondarySlider.remove(currentIndex);
+
+        clearFlash();
+      }).fail(function (res) { // ошибка
+        if (res.status === 404) {
+          switch (res.responseText) {
+            case 'file not found': // обновить окно, на беке тут подключается новый шаблон
+              window.location.reload();
+              break;
+            case 'record not found': // не найдена запись
+              $('article').prepend('<div class="alert alert-danger"><div>Элемент не найден!</div></div>');
+              clearFlash();
+              break;
+            case 'image not found': // не найдена картинка
+              $('article').prepend('<div class="alert alert-danger"><div>Изображение ' + data.picName + ' не найдено!</div></div>');
+              clearFlash();
+              break;
+          }
+        }
+      });
+    }
+
+  });
+
 });

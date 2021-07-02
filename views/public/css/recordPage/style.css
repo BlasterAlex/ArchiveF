@@ -303,3 +303,47 @@ h1 {
     max-height: 500px;
   }
 }
+
+/* Splider */
+
+.spliders {
+  width: 500px;
+}
+
+.splide {
+  padding: 5px;
+}
+
+.splider-buttons {
+  display: flex; 
+  position: absolute;
+  justify-content: center;
+  bottom: 10px;
+}
+
+.splider-buttons button {
+  margin: 5px 5px 0 5px;
+  transition: all 0.2s;
+}
+
+.splider-buttons button:hover {
+  opacity: 0.9;
+}
+
+#primary-slider {
+  position: relative;
+}
+
+#primary-slider img {
+  max-height: 500px;
+  width: auto;
+  max-width: 500px;
+}
+
+#secondary-slider {
+  padding-top: 0;
+}
+
+.smallSlide {
+  background-position: center top !important;
+}
