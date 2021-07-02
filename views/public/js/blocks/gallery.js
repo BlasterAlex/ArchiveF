@@ -52,6 +52,7 @@ $(document).ready(function () {
     focus: 'center',
     pagination: false,
     cover: true,
+    lazyLoad: 'sequential',
     breakpoints: {
       '600': {
         fixedWidth: 66,

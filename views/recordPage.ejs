@@ -74,8 +74,8 @@
                           <ul class="splide__list">
                             <% [record.img].concat(record.addImages).forEach(function(img) { %>
                               <li class="splide__slide smallSlide">
-                                <img src="/<%= img %>" name="<%= img %>" onload="imgLoad(this)" onerror="imgError(this)"
-                                  style="height: auto;" />
+                                <img data-splide-lazy="/<%= img %>" name="<%= img %>" onload="imgLoad(this)"
+                                  onerror="imgError(this)" style="height: auto;" />
                               </li>
                               <% }); %>
                           </ul>
