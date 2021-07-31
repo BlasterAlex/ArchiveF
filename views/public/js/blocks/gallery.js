@@ -82,8 +82,13 @@ $(document).ready(function () {
   saveFirstButton.addEventListener('click', function () {
     const slides = primarySlider.Components.Elements.slides;
     const pictures = slides.map(element => $(element).find('img').attr('name'));
+
+    // Если текущая картинка единственная - выход
+    if (pictures.length < 2) return;
+
+    // Получение новой главной картинки и удаление ее из списка картинок
     const currentIndex = primarySlider.index;
-    const largeImg = pictures.splice(currentIndex, 1);
+    const largeImg = pictures.splice(currentIndex, 1)[0];
 
     // Сбор данных о текущем расположении картинок
     const data = {
@@ -216,20 +221,30 @@ $(document).ready(function () {
 
         clearFlash();
       }).fail(function (res) { // ошибка
-        if (res.status === 404) {
-          switch (res.responseText) {
-            case 'file not found': // обновить окно, на беке тут подключается новый шаблон
-              window.location.reload();
-              break;
-            case 'record not found': // не найдена запись
-              $('article').prepend('<div class="alert alert-danger"><div>Элемент не найден!</div></div>');
-              clearFlash();
-              break;
-            case 'image not found': // не найдена картинка
-              $('article').prepend('<div class="alert alert-danger"><div>Изображение ' + data.picName + ' не найдено!</div></div>');
-              clearFlash();
-              break;
-          }
+        switch (res.status) {
+          case 404:
+            switch (res.responseText) {
+              case 'file not found': // обновить окно, на беке тут подключается новый шаблон
+                window.location.reload();
+                break;
+              case 'record not found': // не найдена запись
+                $('article').prepend('<div class="alert alert-danger"><div>Элемент не найден!</div></div>');
+                clearFlash();
+                break;
+              case 'image not found': // не найдена картинка
+                $('article').prepend('<div class="alert alert-danger"><div>Изображение ' + data.picName + ' не найдено!</div></div>');
+                clearFlash();
+                break;
+            }
+            break;
+          case 409:
+            switch (res.responseText) {
+              case 'last picture':
+                $('article').prepend('<div class="alert alert-danger"><div>Нельзя удалять последнее изображение!</div></div>');
+                clearFlash();
+                break;
+            }
+            break;
         }
       });
     }

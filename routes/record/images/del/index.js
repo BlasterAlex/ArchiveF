@@ -33,11 +33,16 @@ module.exports = function (req, res) {
 
         if (id === -1) { // это главная картинка
           if (records[index].img === picName) {
+            if (records[index].addImages.length === 0) {
+              return res.status(409).send('last picture');
+            }
+
             try {
               fs.unlinkSync(config.srcDir + config.rootDir + config.imageDir + picName);
             } catch (err) {
               warning = 'image not found';
             }
+
             records[index].img = records[index].addImages[0];
             records[index].addImages.splice(0, 1);
           } else {
