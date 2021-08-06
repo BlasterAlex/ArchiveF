@@ -104,8 +104,8 @@
 
 /* Add photo */
 .add_picture_link {
-  width: 12%;
-  max-width: 150px;
+  width: 32%;
+  max-width: 200px;
   position: relative;
   margin: 10px auto 0 auto;
   border-radius: 10px;

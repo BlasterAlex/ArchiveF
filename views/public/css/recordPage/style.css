@@ -14,75 +14,6 @@
     width: 35%;
 }
 
-/* Images */
-#largePicContainer {
-  position: relative;
-}
-
-#largePic {
-  max-width: 100%;
-  max-height: 700px;
-  transition: all 0.2s;
-}
-
-#largePic:hover {
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
-  opacity: 0.9;
-}
-
-/* Accept buttons */
-#recordAccept {
-  width: 40px;
-  right:10px;
-  top: 10px;
-  position: absolute;
-  z-index: 100;
-  opacity: 0.8;
-  transition: all 0.2s;
-}
-
-#recordAccept:hover {
-  opacity: 1;
-  cursor: pointer;
-  transform: scale(1.15) translateY(-1px);
-}
-
-#thumbs {
-  padding-top: 10px;
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.smallPicContainer {
-  position: relative;
-  max-width: 32%;
-  align-self: center;
-  transition: all 0.2s;
-}
-
-.record-imgs-bottom img {
-  max-width: 100%;
-  height: auto;
-}
-
-.smallPicContainer:hover {
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
-  transform: translateY(-2px);
-  opacity: 0.9;
-}
-
-/* Del buttons */
-.recordRedCross {
-  width: 20px;
-  right: 5px;
-  top: 5px;
-  position: absolute;
-  z-index: 100;
-  opacity: 0.8;
-  transition: all 0.2s;
-}
-
 /* Content part */
 .record-content {
     padding-left: 30px;
@@ -318,12 +249,20 @@ h1 {
   display: flex; 
   position: absolute;
   justify-content: center;
-  bottom: 10px;
+  bottom: 15px;
+  left: 10px;
 }
 
 .splider-buttons button {
   margin: 5px 5px 0 5px;
   transition: all 0.2s;
+  opacity: 0.8;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+.splider-buttons button i {
+  height: 16px;
+  width: 16px;
 }
 
 .splider-buttons button:hover {

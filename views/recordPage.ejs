@@ -11,7 +11,6 @@
   <%- include('blocks/head.ejs') %>
     <script src="/js/third-party/splide.min.js"></script>
     <script src="/js/blocks/gallery.js" type="text/javascript"></script>
-    <script src="/js/photoUpload/onRecordPage.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -64,9 +63,12 @@
                         </div>
                         <div class="splider-buttons">
                           <input type="file" id="splide-image-input" required multiple hidden />
-                          <button class="save-first-button">Save as first</button>
-                          <button class="add-button">Add</button>
-                          <button class="remove-button">Remove</button>
+                          <button class="btn save-first-button"><i class="fa fa-heart"
+                              style="color: rgb(236, 143, 143);"></i></button>
+                          <button class="btn add-button" style="color: rgb(67, 177, 67); font-size: 20px;"><i
+                              class="fa fa-plus"></i></button>
+                          <button class="btn remove-button"><i class="fa fa-remove"
+                              style="color: rgb(230, 75, 75); font-size: 20px;"></i></button>
                         </div>
                       </div>
                       <div id="secondary-slider" class="splide">
