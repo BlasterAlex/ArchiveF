@@ -73,6 +73,13 @@ $(document).ready(function () {
   // Set the thumbnails slider as a sync target and then call mount.
   primarySlider.sync(secondarySlider).mount();
 
+  // Main slider move event listener
+  primarySlider.on('move', index => {
+    $('.save-first-button').attr("hidden", index === 0);
+  });
+  primarySlider.go(0);
+
+  // Buttons on main slider
   var saveFirstButton = document.querySelector('.save-first-button');
   var addButton = document.querySelector('.add-button');
   var removeButton = document.querySelector('.remove-button');
