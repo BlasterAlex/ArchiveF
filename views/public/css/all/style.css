@@ -124,7 +124,7 @@
 /* Кнопка Наверх */
 #return-to-top {
   position: fixed;
-  bottom: 20px;
+  bottom: 30px;
   right: 20px;
   background: rgba(54, 54, 54, 0.6);
   width: 50px;
