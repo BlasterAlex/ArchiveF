@@ -55,7 +55,7 @@ var app = initApp();
 
 /* ------- Запуск тестов ------- */
 
-describe('Test 2:', () => {
+describe.skip('Test 2:', () => {
 
   beforeEach((done) => {
     server = app.listen(3000, (err) => {
