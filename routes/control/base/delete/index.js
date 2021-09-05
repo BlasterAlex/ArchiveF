@@ -1,9 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 const rmdir = require('rimraf');
-var config = JSON.parse(fs.readFileSync('config/config.json'));
 
 module.exports = function (req, res) {
+  const config = JSON.parse(fs.readFileSync('config/config.json').toString());
 
   // Полученые данные
   let baseName = req.body.baseName;
@@ -24,8 +24,7 @@ module.exports = function (req, res) {
       return res.status(404).send('repBase not found');
     }
   }
-
-
+  
   // Удаление папки базы
   rmdir(base, function (err) {
     if (err)

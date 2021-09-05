@@ -8,12 +8,12 @@ const recordName = 'test' + uniqid();
 
 // Поиск записи
 function findRecord(name) {
-  let config = JSON.parse(fs.readFileSync('config/config.json'));
+  const config = JSON.parse(fs.readFileSync('config/config.json').toString());
   let data = fs.readFileSync(config.srcDir + config.rootDir + config.json);
   return JSON.parse(data).find(x => x.name === name);
 }
 function findRecordIndex(name) {
-  let config = JSON.parse(fs.readFileSync('config/config.json'));
+  const config = JSON.parse(fs.readFileSync('config/config.json').toString());
   let data = fs.readFileSync(config.srcDir + config.rootDir + config.json);
   return JSON.parse(data).findIndex(x => x.name === name);
 }

@@ -1,9 +1,9 @@
 const fs = require('fs');
 var uniqid = require('uniqid');
-var config = JSON.parse(fs.readFileSync('config/config.json'));
 var dateFormat = require('./../../../utils/dateFormatting');
 
 module.exports = function (req, res) {
+  const config = JSON.parse(fs.readFileSync('config/config.json').toString());
 
   // Проверка на наличие папки
   var errImgFile = false;

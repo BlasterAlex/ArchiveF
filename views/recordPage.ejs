@@ -52,8 +52,8 @@
                             <% [record.img].concat(record.addImages).forEach(function(img) { %>
                               <li class="splide__slide">
                                 <div style="display: flex; justify-content: center; ">
-                                  <a href="/<%= img %>" style="display: none" target="_blank">
-                                    <img src="/<%= img %>" name="<%= img %>" id="largePic" onload="imgLoad(this)"
+                                  <a href="/<%= baseImageDir %><%= img %>" style="display: none" target="_blank">
+                                    <img src="/<%= baseImageDir %><%= img %>" name="<%= img %>" id="largePic" onload="imgLoad(this)"
                                       onerror="imgError(this)" style="height: auto;" />
                                   </a>
                                 </div>
@@ -76,7 +76,7 @@
                           <ul class="splide__list">
                             <% [record.img].concat(record.addImages).forEach(function(img) { %>
                               <li class="splide__slide smallSlide">
-                                <img data-splide-lazy="/<%= img %>" name="<%= img %>" onload="imgLoad(this)"
+                                <img data-splide-lazy="/<%= baseImageDir %><%= img %>" name="<%= img %>" onload="imgLoad(this)"
                                   onerror="imgError(this)" style="height: auto;" />
                               </li>
                               <% }); %>

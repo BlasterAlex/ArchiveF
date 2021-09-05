@@ -1,9 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
-var config = JSON.parse(fs.readFileSync('config/config.json'));
 
 module.exports = function (req, res) {
+  const config = JSON.parse(fs.readFileSync('config/config.json').toString());
 
   // Полученые данные
   let baseName = req.body.baseName;

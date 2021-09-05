@@ -4,13 +4,13 @@ const fs = require('fs');
 const path = require('path');
 
 var testDir = 'test' + require('uniqid')() + '1/';
-var config = JSON.parse(require('fs').readFileSync('config/config.json'));
 var server;
 
 // Настройка сервера
 const initApp = () => {
   const express = require('express');
   const app = express();
+  const config = JSON.parse(require('fs').readFileSync('config/config.json').toString());
 
   // Default options
   app.set('view engine', 'ejs');
@@ -55,6 +55,7 @@ var app = initApp();
 /* ------- Запуск тестов ------- */
 
 describe('Test 1:', () => {
+  const config = JSON.parse(require('fs').readFileSync('config/config.json').toString());
 
   // Запомнить название активной базы
   fs.writeFileSync(path.join(config.srcDir, 'oldActiveBase'), config.rootDir);

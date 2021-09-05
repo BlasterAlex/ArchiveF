@@ -1,5 +1,4 @@
 const fs = require('fs');
-var config = JSON.parse(fs.readFileSync('config/config.json'));
 var dateFormat = require('../../../../utils/dateFormatting');
 
 // Поиск по массиву
@@ -22,10 +21,10 @@ const getUniqueName = (record, extension, index = 0) => {
     return fileName;
 
   return getUniqueName(record, extension, index + 1);
-}
+};
 
 module.exports = function (req, res) {
-
+  const config = JSON.parse(fs.readFileSync('config/config.json').toString());
   fs.readFile(config.srcDir + config.rootDir + config.json, (err, data) => {
     if (err) {
       res.status(404)

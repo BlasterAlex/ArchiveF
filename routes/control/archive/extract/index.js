@@ -6,9 +6,9 @@ const Seven = require('node-7z');
 const getSize = require('get-folder-size');
 
 const pathTo7zip = require('7zip-bin').path7za;
-var config = JSON.parse(fs.readFileSync('config/config.json'));
 
 module.exports = function (req, res) {
+  const config = JSON.parse(fs.readFileSync('config/config.json').toString());
   let baseName = req.body.baseName;
   let password = req.body.password;
 

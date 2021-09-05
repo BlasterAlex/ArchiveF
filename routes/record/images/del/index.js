@@ -1,6 +1,5 @@
 const fs = require('fs');
 var dateFormat = require('../../../../utils/dateFormatting');
-var config = JSON.parse(fs.readFileSync('config/config.json'));
 
 // Поиск по массиву
 var getIndex = function (arr, id) {
@@ -13,7 +12,7 @@ var getIndex = function (arr, id) {
 };
 
 module.exports = function (req, res) {
-
+  const config = JSON.parse(fs.readFileSync('config/config.json').toString());
   fs.readFile(config.srcDir + config.rootDir + config.json, (err, data) => {
     if (err) {
       res.status(404)

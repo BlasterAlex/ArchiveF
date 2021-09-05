@@ -5,7 +5,7 @@ const flash = require('connect-flash');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
-var config = JSON.parse(require('fs').readFileSync('config/config.json'));
+const config = () => JSON.parse(require('fs').readFileSync('config/config.json').toString());
 
 // Default options
 app.set('view engine', 'ejs');
@@ -15,7 +15,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileUpload());
 app.use('/', express.static('./views/public'));
 app.use('/', express.static('./public'));
-app.use('/', express.static(config.srcDir + config.rootDir + config.imageDir));
 app.use(cookieParser());
 
 // Session key
@@ -29,9 +28,10 @@ app.use(flash());
 
 // Глобальные переменные
 app.use(function (req, res, next) {
-  res.locals.baseName = config.rootDir.split('/')[0];
-  res.locals.numOfLinks = config.numOfLinks;
-  res.locals.rowsShown = config.rowsShown;
+  res.locals.baseName = config().rootDir.split('/')[0];
+  res.locals.baseImageDir = config().rootDir + config().imageDir;
+  res.locals.numOfLinks = config().numOfLinks;
+  res.locals.rowsShown = config().rowsShown;
   next();
 });
 
@@ -47,9 +47,9 @@ app.use(function (req, res) {
 require('reloader')({
   watchModules: true,
   onStart: function () {
-    console.log('Listening on port ', config.port);
+    console.log('Listening on port ', config().port);
   },
   onReload: function () {
-    app.listen(config.port);
+    app.listen(config().port);
   }
 });

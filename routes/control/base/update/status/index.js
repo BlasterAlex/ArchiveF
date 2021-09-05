@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-var config = JSON.parse(fs.readFileSync('config/config.json'));
 
 module.exports = function (req, res) {
+  const config = JSON.parse(fs.readFileSync('config/config.json').toString());
   let baseName = req.body.baseName;
   let base = path.join(config.srcDir, baseName);
 

@@ -1,7 +1,7 @@
 const fs = require('fs');
-var config = JSON.parse(fs.readFileSync('config/config.json'));
 
 module.exports = function (req, res) {
+  const config = JSON.parse(fs.readFileSync('config/config.json').toString());
 
   fs.readFile(config.srcDir + config.rootDir + config.json, (err, data) => {
     if (err) res.status(404).render('somethingWrong', { textError: require('../../../utils/errorOutput')() });

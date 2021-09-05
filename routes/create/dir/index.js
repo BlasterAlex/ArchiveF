@@ -1,8 +1,7 @@
 const fs = require('fs');
-var config = JSON.parse(fs.readFileSync('config/config.json'));
 
 module.exports = function (req, res) {
-
+  const config = JSON.parse(fs.readFileSync('config/config.json').toString());
   fs.readFile(config.srcDir + config.rootDir + config.json, (err) => {
     if (err) {
       fs.mkdir(config.srcDir + config.rootDir, (err) => { // создание папки

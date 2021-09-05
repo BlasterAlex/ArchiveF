@@ -3,10 +3,11 @@ const fs = require('fs');
 const path = require('path');
 const rmdir = require('rimraf');
 
-var config = JSON.parse(require('fs').readFileSync('config/config.json'));
 
 /* ------- Запуск тестов ------- */
 module.exports = function (testDir) {
+  const config = JSON.parse(require('fs').readFileSync('config/config.json').toString());
+
   // Базы для текущего теста
   const baseName = testDir.slice(0, -1);
   const repBase = baseName + '1';

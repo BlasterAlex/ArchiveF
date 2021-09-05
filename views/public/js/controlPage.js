@@ -21,49 +21,8 @@ function cardResize(el, elClass) {
   el.find('.control-card-base-avatar').css('height', cardsHeight[el.index(elClass)]);
 }
 
-// Окно на всю страницу с красивой анимацией
-function createFullPagePopup(text) {
-  $('article').append('<div class="control-popup-background">' +
-    '  <div class="card mb-3 control-popup-password" style="padding: 0; display: none; max-width: 500px">' +
-    '    <p class="control-popup-message" style="margin: 20px 20px">' + text + '</p>' +
-    '  </div>' +
-    '</div>');
-
-  $('.control-popup-background').fadeIn(300, function () {
-    let block = $(this).find('.control-popup-password');
-    let saved = block.css(['overflow', 'height']);
-
-    block.css({
-      'height': 0,
-      'display': 'block',
-      'overflow': 'scroll'
-    });
-
-    let actualHeight = block.prop('scrollHeight');
-    block.css('overflow', saved['overflow']);
-    block.animate({ 'height': actualHeight }, 150, function () {
-
-      // Каждую букву слова обернуть в span
-      let textWrapper = document.querySelector('.control-popup-message');
-      textWrapper.innerHTML = textWrapper.textContent.replace(/\S/g, '<span class=\'letter\'>$&</span>');
-
-      anime.timeline({ loop: false })
-        .add({
-          targets: '.control-popup-message .letter',
-          opacity: [0, 1],
-          easing: 'easeInOutQuad',
-          duration: 10,
-          delay: function (el, i) {
-            return 50 * (i + 1);
-          }
-        });
-    });
-  });
-}
-
 // Главная функция
 $(document).ready(function () {
-
   // Проход по картам при загрузке страницы
   $('.control-card-img').each(function () {
     // Расстановка иконок на аватарки
@@ -233,61 +192,58 @@ $(document).on('click', '.card-description-readmore', function () {
 
 // Активирование базы
 $(document).on('click', '.card-button-activate', function () {
-
   let baseName = $(this).closest('.row').find('.card-title').text().trim();
-  if (confirm('Вы действительно хотите активировать ' + baseName + '?') === true) {
 
-    // Сбор данных для отправки
-    let data = {
-      baseName: baseName
-    };
+  // Сбор данных для отправки
+  let data = {
+    baseName: baseName
+  };
 
-    // Отправка запроса на бэк
-    $.ajax({ // отправка запроса на бэк
-      url: '/control/base/update/status',
-      method: 'POST',
-      data: data
-    }).done(function (res) { // успех
+  // Отправка запроса на бэк
+  $.ajax({ // отправка запроса на бэк
+    url: '/control/base/update/status',
+    method: 'POST',
+    data: data
+  }).done(function (res) { // успех
 
-      // Окно с сообщением
-      createFullPagePopup('База "' + res.baseName + '" успешно активирована. Перезапустите сервис для применения изменений.');
+    // Изменение названия базы в шапке страницы
+    $('#header-base-name').text(res.baseName);
 
-      // Снятие акивации со всех баз
-      $('.control-card').each(function () {
-        if ($(this).hasClass('active')) {
-          $(this).removeClass('active');
+    // Снятие акивации со всех баз
+    $('.control-card').each(function () {
+      if ($(this).hasClass('active')) {
+        $(this).removeClass('active');
 
-          changeBtnState({
-            obj: $(this).find('.card-button-activate'),
-            isActive: false,
-            newText: 'Активировать'
-          });
-        }
-      });
-
-      // Активация выбранной базы
-      let card = $(document.getElementsByName(res.baseName));
-      card.closest('.control-card').addClass('active');
-
-      changeBtnState({
-        obj: card.find('.card-button-activate'),
-        isActive: true,
-        newText: 'Активна'
-      });
-
-    }).fail(function (res) { // ошибка
-      switch (res.status) {
-        case 404: // не найдено
-          if (res.responseText === 'base not found') {
-            $('article').prepend('<div class="alert alert-danger"><div>База не найдена!</div></div>');
-            clearFlash();
-          }
-          break;
-        case 505: // ошибка сервера
-          $('article').prepend('<div class="alert alert-danger"><div>' + res.responseText + '</div></div>');
-          clearFlash();
-          break;
+        changeBtnState({
+          obj: $(this).find('.card-button-activate'),
+          isActive: false,
+          newText: 'Активировать'
+        });
       }
     });
-  }
+
+    // Активация выбранной базы
+    let card = $(document.getElementsByName(res.baseName));
+    card.closest('.control-card').addClass('active');
+
+    changeBtnState({
+      obj: card.find('.card-button-activate'),
+      isActive: true,
+      newText: 'Активна'
+    });
+
+  }).fail(function (res) { // ошибка
+    switch (res.status) {
+      case 404: // не найдено
+        if (res.responseText === 'base not found') {
+          $('article').prepend('<div class="alert alert-danger"><div>База не найдена!</div></div>');
+          clearFlash();
+        }
+        break;
+      case 505: // ошибка сервера
+        $('article').prepend('<div class="alert alert-danger"><div>' + res.responseText + '</div></div>');
+        clearFlash();
+        break;
+    }
+  });
 });

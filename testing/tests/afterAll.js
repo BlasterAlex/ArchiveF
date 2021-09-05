@@ -2,9 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const rmdir = require('rimraf');
 
-var config = JSON.parse(require('fs').readFileSync('config/config.json'));
-
 describe('After all:', () => {
+  const config = JSON.parse(require('fs').readFileSync('config/config.json').toString());
   test('cleaning up', (done) => {
 
     // Проверка наличия временного файла
