@@ -9,8 +9,8 @@
   "main": "server.js",
   "scripts": {
     "start": "start http://localhost:3000 || xdg-open http://localhost:3000 2>/dev/null & node server.js",
-    "lint": "eslint '**/*.js'",
-    "lint:fix": "eslint '**/*.js' --fix",
+    "lint": "eslint \"**/*.js\"",
+    "lint:fix": "eslint \"**/*.js\" --fix",
     "test": "jest './testing/first.test.js' && jest './testing/second.test.js'"
   },
   "author": "Alex Pish",

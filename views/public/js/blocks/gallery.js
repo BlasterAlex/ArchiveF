@@ -35,7 +35,7 @@ const splideAddImages = (primarySlider, secondarySlider, images) => {
   });
   primarySlider.go(primarySlider.length);
   secondarySlider.go(secondarySlider.length);
-}
+};
 
 // Загрузка страницы
 $(document).ready(function () {
@@ -75,7 +75,7 @@ $(document).ready(function () {
 
   // Main slider move event listener
   primarySlider.on('move', index => {
-    $('.save-first-button').attr("hidden", index === 0);
+    $('.save-first-button').attr('hidden', index === 0);
   });
   primarySlider.go(0);
 
