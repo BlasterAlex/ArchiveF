@@ -20,10 +20,10 @@ module.exports = {
     'no-unused-vars': 'warn',
     'no-inner-declarations': 'warn',
     'indent': ['warn', 2, {
-      "SwitchCase": 1,
-      "outerIIFEBody": 0
+      'SwitchCase': 1,
+      'outerIIFEBody': 0
     }],
-    'linebreak-style': ['warn', 'win'],
+    'linebreak-style': ['warn', 'windows'],
     'quotes': ['warn', 'single'],
     'semi': ['warn', 'always']
   }

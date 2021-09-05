@@ -96,9 +96,6 @@ module.exports = function (req, res) {
               if (err)
                 return res.status(500).send(err);
             });
-          } else if (length > 4) {
-            req.flash('error', 'Вы не можете загрузить более 4-х картинок!');
-            return res.redirect('/add');
           } else {
             var imgs = req.files.Images;
 
