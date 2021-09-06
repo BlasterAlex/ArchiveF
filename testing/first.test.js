@@ -20,7 +20,6 @@ const initApp = () => {
   app.use(require('express-fileupload')());
   app.use('/', express.static('./views/public'));
   app.use('/', express.static('./public'));
-  app.use('/', express.static(config.srcDir + config.rootDir + config.imageDir));
   app.use(require('cookie-parser')());
 
   // Session key
@@ -35,6 +34,7 @@ const initApp = () => {
   // Глобальные переменные
   app.use(function (req, res, next) {
     res.locals.baseName = config.rootDir.split('/')[0];
+    res.locals.baseImageDir = config.rootDir + config.imageDir;
     res.locals.numOfLinks = config.numOfLinks;
     res.locals.rowsShown = config.rowsShown;
     next();

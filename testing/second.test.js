@@ -4,14 +4,17 @@ const fs = require('fs');
 const path = require('path');
 const rmdir = require('rimraf');
 
-const config = JSON.parse(require('fs').readFileSync('config/config.json'));
-const root = path.join(config.srcDir, config.rootDir);
+const config = () => JSON.parse(require('fs').readFileSync('config/config.json').toString());
+const itif = () => /^test[a-zA-Z0-9]+1\/$/.test(config().rootDir) ? it : it.skip;
+
+const root = path.join(config().srcDir, config().rootDir);
 var server;
 
 // Настройка сервера
 const initApp = () => {
   const express = require('express');
   const app = express();
+  const config = JSON.parse(require('fs').readFileSync('config/config.json').toString());
 
   // Default options
   app.set('view engine', 'ejs');
@@ -21,7 +24,6 @@ const initApp = () => {
   app.use(require('express-fileupload')());
   app.use('/', express.static('./views/public'));
   app.use('/', express.static('./public'));
-  app.use('/', express.static(config.srcDir + config.rootDir + config.imageDir));
   app.use(require('cookie-parser')());
 
   // Session key
@@ -36,6 +38,7 @@ const initApp = () => {
   // Глобальные переменные
   app.use(function (req, res, next) {
     res.locals.baseName = config.rootDir.split('/')[0];
+    res.locals.baseImageDir = config.rootDir + config.imageDir;
     res.locals.numOfLinks = config.numOfLinks;
     res.locals.rowsShown = config.rowsShown;
     next();
@@ -51,12 +54,10 @@ const initApp = () => {
 
   return app;
 };
-var app = initApp();
+const app = initApp();
 
-/* ------- Запуск тестов ------- */
-
-describe.skip('Test 2:', () => {
-
+// Функция тестов
+const testFunction = () => {
   beforeEach((done) => {
     server = app.listen(3000, (err) => {
       if (err) return done(err);
@@ -87,7 +88,7 @@ describe.skip('Test 2:', () => {
   });
 
   test('Create imageDir  via /create/imageDir', (done) => {
-    rmdir(path.join(root, config.imageDir), function (e) {
+    rmdir(path.join(root, config().imageDir), function (e) {
       if (e) done(e);
 
       global.agent
@@ -101,7 +102,7 @@ describe.skip('Test 2:', () => {
   });
 
   test('Create json file via /create/json', (done) => {
-    fs.unlinkSync(path.join(root, config.json));
+    fs.unlinkSync(path.join(root, config().json));
     global.agent
       .get('/create/json')
       .expect(303)
@@ -113,4 +114,11 @@ describe.skip('Test 2:', () => {
 
   require('./tests/record');
   require('./tests/afterAll');
-});
+};
+
+/* ------- Запуск тестов ------- */
+if (/^test[a-zA-Z0-9]+1\/$/.test(config().rootDir)) {
+  describe('Test 2', testFunction);
+} else {
+  describe.skip('Test 2', testFunction);
+}
