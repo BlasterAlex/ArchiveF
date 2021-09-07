@@ -19,17 +19,18 @@ const splideMove = (splide, from, to) => {
 
 // Добавление картинок на слайдер
 const splideAddImages = (primarySlider, secondarySlider, images) => {
+  const baseImageDir = $('#baseImageDir').text().trim();
   images.forEach(img => {
     primarySlider.add(`<li class="splide__slide">
     <div style="display: flex; justify-content: center; ">
-      <a href="/${img}" target="_blank">
-        <img src="/${img}" name="${img}" id="largePic" onload="imgLoad(this)"
+      <a href="/${baseImageDir}${img}" target="_blank">
+        <img src="/${baseImageDir}${img}" name="${img}" id="largePic" onload="imgLoad(this)"
           onerror="imgError(this)" style="height: auto;" />
       </a>
     </div>
   </li>`);
     secondarySlider.add(`<li class="splide__slide smallSlide">
-    <img src="/${img}" name="${img}" onload="imgLoad(this)" onerror="imgError(this)"
+    <img src="/${baseImageDir}${img}" name="${img}" onload="imgLoad(this)" onerror="imgError(this)"
       style="height: auto;" />
     </li>`);
   });
