@@ -77,7 +77,7 @@ module.exports = function (req, res) {
 
           // Дата изменения
           records[index].changed = dateFormat.dateToString(new Date);
-          records[index].changedInt = dateFormat.stringToDate(records[index].created).getTime();
+          records[index].changedInt = dateFormat.stringToDate(records[index].changed).getTime();
 
           // Сортировка
           records = require('../../../utils/sortRecords')(records, { 'prop': 'name', 'asc': true });

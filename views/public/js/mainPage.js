@@ -1,6 +1,6 @@
 // Получение элемента в строке таблицы
 function getCellValue(row, index) {
-  if (index === 2)
+  if (index >= 2)
     return $(row).children('td').eq(index).data('int');
   return $(row).children('td').eq(index).text().trim();
 }
