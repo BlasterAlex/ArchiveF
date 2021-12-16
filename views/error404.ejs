@@ -8,6 +8,7 @@
 </head>
 
 <body>
+  <%- include('blocks/preloader.ejs') %>
   <header>
     <%- include('blocks/header.ejs') %>
   </header>
@@ -15,8 +16,8 @@
   <article>
     <div class="errorPlace">
       <h1>Страницы не существует...</h1>
-      <div style='margin-top: 20px;'><a href="/">На главную</a></div>
-      <img src='/img/error404_dribbble.gif' />
+      <div style='margin: 20px 0;'><a href="/">На главную</a></div>
+      <img src='/img/404_error.png' />
     </div>
   </article>
 </body>
