@@ -19,8 +19,8 @@
             $(this).find('td:first a').text(records[index].name);
             $(this).find('td:first a').attr('href', 'record/' + records[index].id);
 
-            $(this).find('td:eq(1) a').attr('href', records[index].img);
-            $(this).find('td:eq(1) img').attr('src', records[index].img);
+            $(this).find('td:eq(1) a').attr('href', '<%= baseImageDir %>' + records[index].img);
+            $(this).find('td:eq(1) img').attr('src', '<%= baseImageDir %>' + records[index].img);
 
             $(this).fadeIn(250);
           });
@@ -82,7 +82,7 @@
                     <td>
                       <div class="tableImgCont">
                         <a href=<%= baseImageDir %><%=records[0].img %>>
-                          <img src="<%= baseImageDir %><%= records[0].img %>" onerror="this.src='img/default.jpg'" />
+                          <img src="<%= baseImageDir %><%= records[0].img %>"  />
                         </a>
                       </div>
                     </td>

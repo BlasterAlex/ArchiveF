@@ -1,0 +1,32 @@
+[data-theme="dark"] .navbar {
+    background-color: #3d3d3d !important;
+    padding: 8px 16px;
+}
+
+[data-theme="dark"] .navbar-brand {
+    color: white;
+}
+
+[data-theme="dark"] #header_havigation .nav-item {
+    color: #e8e7e7;
+}
+
+[data-theme="dark"] .record-page-title {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .record-imgs {
+    background: #1f1f1f;
+}
+
+[data-theme="dark"] .add-button-container {
+    background-color: #3d3d3d;
+}
+
+[data-theme="dark"] .control-add-button-container {
+    background-color: #3d3d3d;
+}
+
+[data-theme="dark"] .control-popup-background {
+    background-color: rgba(31, 31, 31, 0.9);
+}
