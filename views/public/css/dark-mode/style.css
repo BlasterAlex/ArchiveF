@@ -30,3 +30,19 @@
 [data-theme="dark"] .control-popup-background {
     background-color: rgba(31, 31, 31, 0.9);
 }
+
+[data-theme="dark"] .table th {
+    color: rgb(255, 255, 255);
+}
+
+[data-theme="dark"] .table th.sortable:hover {
+    color: rgb(255, 255, 255);
+}
+
+[data-theme="dark"] .table th.sortable::after {
+    color: rgba(159, 159, 159, 0.56);
+}
+
+[data-theme="dark"] .table th.sortable:hover::after {
+    color: rgba(255, 255, 255, 0.8);
+}
